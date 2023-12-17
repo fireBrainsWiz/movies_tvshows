@@ -11,6 +11,8 @@ export default function Home() {
     <div className=" bg-[#111] ">
       <HomePageHeaderSection />
       <BelowTheHeader />
+
+      
     </div>
   )
 }
