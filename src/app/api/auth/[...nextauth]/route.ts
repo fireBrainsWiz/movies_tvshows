@@ -1,4 +1,4 @@
-import NextAuth, {AuthOptions, SessionStrategy} from "next-auth";
+import NextAuth, {NextAuthOptions , SessionStrategy} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import loginFn from "./helpers/loginFn";
 import GithhuProvider from "next-auth/providers/github";
@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 import saveOAuthUser from "@/app/(__secure__)/backend_folders/helpers/saveOAthUser";
 
 
-const authOptions: AuthOptions = {
+const authOptions: NextAuthOptions  = {
   session: {
     strategy: 'jwt' as SessionStrategy,
     maxAge:  24 * 60 * 60// 24 hours
