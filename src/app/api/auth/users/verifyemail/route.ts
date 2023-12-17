@@ -1,5 +1,6 @@
-import { connectDB } from "@/backend_folders/dbConfig/dbConfig";
-import User from "@/backend_folders/models/userModel";
+
+import { connectDB } from "@/app/(__secure__)/backend_folders/dbConfig/dbConfig";
+import User from "@/app/(__secure__)/backend_folders/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
 connectDB();

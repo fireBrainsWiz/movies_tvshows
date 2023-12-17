@@ -1,10 +1,11 @@
-import { connectDB } from "@/backend_folders/dbConfig/dbConfig";
-import User from "@/backend_folders/models/userModel";
 
 import {NextRequest, NextResponse} from 'next/server'
 import bcryptjs from 'bcryptjs'
-import { sendEmail } from "@/backend_folders/helpers/mailer";
+// import { sendEmail } from "@/backend_folders/helpers/mailer";
 import { signupSchema } from "@/app/lib/types";
+import { sendEmail } from "@/app/(__secure__)/backend_folders/helpers/mailer";
+import User from '@/app/(__secure__)/backend_folders/models/userModel';
+import { connectDB } from '@/app/(__secure__)/backend_folders/dbConfig/dbConfig';
 
 connectDB()
 
