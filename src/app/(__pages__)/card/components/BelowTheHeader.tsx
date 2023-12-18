@@ -22,85 +22,8 @@ export default function BelowTheHeader() {
   
   return (
     <div className="bg-neutral-800 py-10">
-      {/* <div className=" bg-red-500 grid grid-cols-[39%_39%_20%] gap-1 justify-between min-h-[50vmin]p px-2 w-full h-[10vmin]">
-
-        <div className="grid grid-cols-2">
-          <div className="bg-green-200">
-          <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/the-mandalorian.png'} 
-              alt="the-witcher" 
-              // className="w-full h-auto"
-              width={708} height={1029} 
-            />
-            </Link>
-          </div>
-          <div className="bg-green-400">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/the-witcher.png'} 
-              alt="the-witcher" 
-              // className="w-full h-auto"
-              width={708} height={1029} 
-            />
-            </Link>
-          </div>
-        </div>
-        <div className="grid grid-rows-2 gap-4 ml-4">
-          <div className="bg-green-200 grid grid-cols-[70%_28%] gap-3">
-            <div className="bg-rose-200">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/omitb.png'} 
-              alt="the-witcher" 
-              width={882} height={497} />
-            </Link>
-            </div>
-            <div className="bg-rose-600">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/omitb-title.png'} 
-              alt="the-witcher" 
-              width={429} height={315} />
-            </Link>
-            </div>
-          </div>
-          <div className="bg-green-200 grid grid-cols-[70%_28%] gap-3">
-            <div className="bg-rose-200">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/the-last-of-us.png'} 
-              alt="the-witcher" 
-              width={882} height={497} />
-            </Link>
-            </div>
-            <div className="bg-rose-600">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/the-last-of-us-title.png'} 
-              alt="the-witcher" 
-              width={429} height={315} />
-            </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-rows-2 gap-4">
-          <div className="bg-green-200">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/american-horror-story.png'} 
-              alt="the-witcher" 
-              width={708} height={483} />
-            </Link>
-          </div>
-          <div className="bg-green-400">
-            <Link href={`/card?title=1&id=2`}>
-              <Image src={'/below-header/fear-the-walking-dead.png'} 
-              
-              alt="the-witcher" 
-              width={708} height={483} />
-            </Link>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <Test /> */}
-      {/* <Test2 /> */}
-
+      <Test />
+      <Test2 />
     </div>
   )
 }
@@ -128,7 +51,7 @@ function Test() {
   return (
     <svg width="100%" height="100%" viewBox="0 0 1246 343" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-    <foreignObject x="0" y="0" width="100%" height="100%" className="bg-amber-500">
+    <foreignObject x="0" y="0" width="100%" height="100%" className="bg-amber-500p">
 
     <div className=" bg-red-500p grid grid-cols-[39%_39%_20%] gap-1 justify-between min-h-[50vmin]p px-2 w-full ">
 
@@ -234,12 +157,11 @@ function Test() {
 
 
 
-
 function Test2() {
   return (
     <svg width="100%" height="10%" viewBox="0 0 1246 170" fill="blue" xmlns="http://www.w3.org/2000/svg" className="my-9">
 
-    <foreignObject x="0" y="0" width="100%" height="100%" className="bg-amber-500">
+    <foreignObject x="0" y="0" width="100%" height="100%" className="bg-amber-500p">
 
     <div className=" bg-red-500p grid grid-cols-4 gap-[1px] content-center px-2 w-full h-full">
       <div>

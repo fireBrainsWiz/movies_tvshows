@@ -10,13 +10,13 @@ import AddToMyListButton from './AddToMyListButton';
 export default function HomePageHeaderSection() {
 //11440, 1920
   return (
-    <div className=" w-full max-w-[1920px] mx-auto bg-neutral-900">
-      <div className="bg-stone-500  relative my-6p">
+    <div className=" w-full max-w-[1920px] mx-auto bg-neutral-900p">
+      <div className="bg-stone-500p  relative my-6p">
         <HamburgerAndSearch />
-        {/* <MovieBanners /> */}
+        <MovieBanners />
         <AddToMyListButton />
       </div>
-      <hr/>
+      {/* <hr className='bg-red-500 text-green-500 border-orange-400'/> */}
 
     </div>
   )

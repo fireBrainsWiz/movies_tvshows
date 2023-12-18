@@ -13,11 +13,11 @@ export default function MovieBanner({i}) {
     return () => removeEventListener('load', fn)
   }, [setIsReady])
 
-  if (!isReady) return <div className="h-[7px] "></div>
+  if (!isReady) return <div className="h-[7px]"></div>
   
   return (
     <swiper-slide>
-      <div className={` bg-blue-800 text-center ${!isReady && 'h-[0]'}`}>
+      <div className={` bg-blue-800p text-center ${!isReady && 'h-[0]'}`}>
       <Image src={`/_banners/${i+1}.png`} alt="" 
         width={1920} height={230}
           className="max-w-full bg-green-500p"
