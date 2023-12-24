@@ -6,19 +6,25 @@ import ScrollIntoView from "./ScrollIntoView";
 import axios from 'axios';
 import { LINKS } from '@/app/lib/types';
 import { TMDBOptions } from '@/app/client/helpers/TMDB_API';
+import { usePathname, useRouter } from 'next/navigation';
 
 let id1 , id2, id3
 
-export default function ScrollIntoViewContainer({setN}) {
+
+export default function ScrollIntoViewContainer({ lastSlide, activeSlide, searchParams }) {
 
   const swiperElRef = useRef(null);
-  const [nOfSlides, setNOfSlides] = useState(4);
+  const [nOfSlides, setNOfSlides] = useState(Number(lastSlide) || 4);
   const [slideNumber, setSlideNumber] = useState(1);
+  const [realIndex, setRealIndex] = useState(Number(activeSlide) || 0);
   const [noMorePages, setNoMorePages] = useState(false);
     
+  const router = useRouter()
+  const pathname = usePathname()
 
   const checkIfNextIsAvailable = useCallback( async (scw) => {
     // console.log('one', slideNumber, nOfSlides)
+    if (noMorePages) return
     
     const res = await axios(`${LINKS.MOVIELISTS.TOPRATED}${nOfSlides}`, TMDBOptions)
   
@@ -41,11 +47,31 @@ export default function ScrollIntoViewContainer({setN}) {
 
   useEffect(() => {
     const scw = swiperElRef.current.swiper
-    console.log('jjjjjjjjj', slideNumber, nOfSlides)
-    setN(slideNumber)
+    setRealIndex(scw.realIndex)
+
+      setTimeout(() => {
+        console.log({realIndex, activeSlide, len: scw.slides.length})
+        scw.activeIndex = realIndex
+        scw.update()
+      })
+  }, [setRealIndex])
+
+
+  useEffect(() => {
+    const scw = swiperElRef.current.swiper
+    setRealIndex(scw.activeIndex)
+
+    
+    // console.log('active index: ', scw.activeIndex)
+    // setTimeout(() => {
+    //   scw.activeIndex = 2
+    //   scw.update()
+    // }, 2000)
+    // console.log('jjjjjjjjj', slideNumber, nOfSlides)
 
 
     scw?.on('slideChange', function() {
+      
       clearTimeout(id3)
       
       id3 = setTimeout(() => {
@@ -86,11 +112,11 @@ export default function ScrollIntoViewContainer({setN}) {
     
     // console.log(slideNumber)
     // console.log(scw)
-  }, [checkIfNextIsAvailable, setSlideNumber])
+  }, [checkIfNextIsAvailable, setSlideNumber, setRealIndex])
   
   // console.log('two', slideNumber, nOfSlides)
-  
-  return (
+
+  const content = (
     <div className="min-h-[800px]p bg-sky-900 ">
       <div className=" flex justify-between">
           <button type="button" 
@@ -123,7 +149,12 @@ export default function ScrollIntoViewContainer({setN}) {
         {
           [...Array(nOfSlides)].map((_, i) => {
             return (
-                <ScrollIntoView key={i} page={i+1}/>
+                <ScrollIntoView 
+                  key={i} 
+                  page={i+1}
+                  nOfSlides={nOfSlides}
+                  activeSlide={realIndex}
+                />
               )
           })
         }
@@ -148,6 +179,9 @@ export default function ScrollIntoViewContainer({setN}) {
       </div>
     </div>
   )
+
+  
+  return content
 }
 
 

@@ -7,7 +7,9 @@ import axios from "axios"
 import { TMDBOptions } from "@/app/client/helpers/TMDB_API"
 
 
-export default function ScrollIntoView({page}) {
+export default function ScrollIntoView({
+  page, nOfSlides, activeSlide
+}) {
   const [data, setData] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -38,7 +40,11 @@ export default function ScrollIntoView({page}) {
         {
           data?.results.map((result, i) => (
             <div key={i} className="w-[clamp(100px_10vmin_510px)]">
-              <Result item={result}/>
+              <Result 
+                item={result} 
+                nOfSlides={nOfSlides}
+                activeSlide={activeSlide}
+              />
             </div>
           ))
         }

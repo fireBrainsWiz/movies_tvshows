@@ -4,12 +4,27 @@ import Link from 'next/link';
 
 type ResultProps = {
   item: ResultType
+  nOfSlides: number
+  activeSlide: number
 }
 
-export default function Result({ item }: ResultProps) {
+export default function Result({ 
+  item, nOfSlides, activeSlide 
+}: ResultProps) {
   // console.log(item)
+
+  const href = {
+    pathname: `/card`,
+    query: {
+      title: item.title,
+      id: item.id,
+      'active-slide': activeSlide,
+      'last-slide': nOfSlides,
+    }
+  }
+  
   return (
-    <Link href={`/card?title=${item.title}&id=${item.id}`}>
+    <Link href={href}>
       <Image 
         src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
         width={170}

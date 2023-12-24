@@ -1,16 +1,21 @@
 'use client'
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ScrollIntoViewContainer from "./ScrollIntoViewContainer";
 
 
 export default function TopRatedContentWrapper() {
+  const searchParams = useSearchParams()
+  const activeSlide = searchParams.get('active-slide')
+  let lastSlide = searchParams.get('last-slide')
   const router = useRouter()
   const [n, setN] = useState(0)
+  // console.log({ activeSlide, lastSlide })
   
   // console.log('NNNNNNNNN is: ', n)
+  // console.log(searchParams.get('name'))
 
   useEffect(() => {
   }, [n])
@@ -39,7 +44,14 @@ export default function TopRatedContentWrapper() {
       </h1>
       
       <div>
-        <ScrollIntoViewContainer setN={setN}/>
+        {/* {
+          name && <ScrollIntoViewContainer setN={setN}/>
+        } */}
+        <ScrollIntoViewContainer 
+          activeSlide={activeSlide}
+          lastSlide={lastSlide}
+          searchParams={searchParams}
+        />
       </div>
     </div>
   )
