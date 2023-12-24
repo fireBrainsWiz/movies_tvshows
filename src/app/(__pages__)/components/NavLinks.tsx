@@ -4,7 +4,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import Image from 'next/image';
 import Link from "next/link";
 
-export default function HamburgerAndSearch() {
+export default function NavLinks() {
   return (
     <div className='bg-amber-500p min-h-[50px] grid grid-cols-[70%_30%] grid-flow-col items-center justify-between px-3 text-3xl text-white absolute top-0 w-full z-10'>
       <div className='bg-red-500p flex gap-10'>
@@ -16,13 +16,13 @@ export default function HamburgerAndSearch() {
             <Link href={'/popular'}>Popular</Link>
           </li>
           <li>
-            <Link href={'/toprated'}>Top Rated</Link>
+            <Link href={'/top-rated'}>Top Rated</Link>
           </li>
           <li>
-            <Link href={'/ontheair'}>On The Air</Link>
+            <Link href={'/on-the-air'}>On The Air</Link>
           </li>
           <li>
-            <Link href={'/airingtoday'}>Airing Today</Link>
+            <Link href={'/airing-today'}>Airing Today</Link>
           </li>
         </ul>
 
@@ -35,13 +35,12 @@ export default function HamburgerAndSearch() {
           <Link href={'/search'} className=' cursor-pointer'>
             <BsSearch size={20}/>  
           </Link>
-          <button className='w-[40px] h-[40px] rounded-full bg-stone-600p flex items-center overflow-hidden border-2 border-white cursor-pointer'>
+          <button className='w-[clamp(20px,5vmin,40px)] h-[clamp(20px,5vmin,40px)]  rounded-full bg-stone-600p flex items-center overflow-hidden border-2 border-white cursor-pointer'>
             <Image 
-              src="/profile.jpg" alt="" 
+              src="/profile.jpg" alt="profile picture" 
               width={40} 
               height={40}
-              className='rounded-full'/>
-            Image
+              className='rounded-full w-full h-aoto'/>
           </button>
       </div>
     </div>

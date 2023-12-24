@@ -1,3 +1,4 @@
+
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
@@ -26,3 +27,13 @@ export default function MovieBanner({i}) {
     </swiper-slide>
   )
 }
+
+
+/* 
+Make sure that all the Babel plugins and presets you are using
+are defined as dependencies or devDependencies in your package.json
+file. It's possible that the missing plugin is loaded by a preset
+you are using that forgot to add the plugin to its dependencies: you
+can workaround this problem by explicitly adding the missing package
+to your top-level package.json.eslint
+ */

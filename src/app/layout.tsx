@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import ReactQueryClientProvider from './(__pages__)/providers/ReactQueryClientProvider'
 import Search from './(__pages__)/search/page'
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

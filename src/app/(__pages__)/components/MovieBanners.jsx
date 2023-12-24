@@ -12,13 +12,8 @@ export default function MovieBanners() {
 
 
   useEffect(() => {
-    const scw = swiperContainerWrapper.current
-    const prevButton = swiperElRef.current.shadowRoot
-    .querySelector('.swiper-button-prev')
-    const nextButton = swiperElRef.current.shadowRoot
-    .querySelector('.swiper-button-next')
-    const delay = 300
-    
+    const scw = swiperContainerWrapper?.current
+    const throtle = 300
     
     function onWheel(e) {
       e.preventDefault()
@@ -26,14 +21,14 @@ export default function MovieBanners() {
       if (e.deltaY > 0) {
         clearTimeout(timerId)
         timerId = setTimeout(() => {
-          nextButton.click()
-        }, delay)
+          swiperElRef.current.swiper.slideNext()
+        }, throtle)
 
       } else {
         clearTimeout(timerId)
         timerId = setTimeout(() => {
-          prevButton.click()
-        }, delay)
+          swiperElRef.current.swiper.slidePrev()
+        }, throtle)
       }
     }
 
@@ -51,7 +46,7 @@ export default function MovieBanners() {
       <swiper-container
         ref={swiperElRef}
         slides-per-view={1}
-        speed={2000}
+        speed={1000}
         navigation
         pagination
         loop
