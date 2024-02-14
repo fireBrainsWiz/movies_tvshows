@@ -25,3 +25,54 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+
+.slick-dots li.slick-active button:before
+{
+    opacity: .75;
+    width: 20px !important;
+    height: 7px !important;
+    border-radius: 2rem !important;
+    background: #61da9a;
+    top: 5px !important;
+    content: '' !important;
+
+    /* transition: width .2s linear, height .2s !important; */
+}
+
+select {
+  background-color: transparent;
+
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+
+  width: calc(268px - 150px);
+    padding: 5px;
+    font-size: 16px;
+    line-height: 1;
+    border: 0;
+    border-radius: 5px;
+    height: 34px;
+    background: no-repeat right #dddddd00;
+    -webkit-appearance: none;
+    background-position-x: calc(244px - 150px);
+}
+
+.caret {
+  transition: transform .2s linear;
+}
+.select-caret-rotate {
+  transform: rotate(-180deg);
+}
+
+button {
+  cursor: pointer;
+}
+
+.hr {
+  border: none;
+  border-bottom: 0.01px solid #8b8b8b72;
+  margin-block: 50px;
+}

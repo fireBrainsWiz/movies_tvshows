@@ -1,134 +1,78 @@
-import { register, } from 'swiper/element/bundle';
-register();
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import ScrollIntoView from "./ScrollIntoView";
+import TopRatedMovieOrTVshowsSlide from './TopRatedMovieOrTVshowsSlide';
 import axios from 'axios';
 import { LINKS } from '@/app/lib/types';
 import { TMDBOptions } from '@/app/client/helpers/TMDB_API';
-import { usePathname, useRouter } from 'next/navigation';
-
-let id1 , id2, id3
+import Slider from "react-slick";
 
 
-export default function ScrollIntoViewContainer({ lastSlide, activeSlide, searchParams }) {
+// let id1 , id2, id3
+
+
+export default function TopRatedMoviesOrTVshows() {
 
   const swiperElRef = useRef(null);
-  const [nOfSlides, setNOfSlides] = useState(Number(lastSlide) || 4);
-  const [slideNumber, setSlideNumber] = useState(1);
-  const [realIndex, setRealIndex] = useState(Number(activeSlide) || 0);
+  const [nOfSlides, setNOfSlides] = useState(4);
+  const [realIndex, setRealIndex] = useState(0);
   const [noMorePages, setNoMorePages] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [prevSlide, setPrevSlide] = useState(0)
     
-  const router = useRouter()
-  const pathname = usePathname()
-
   const checkIfNextIsAvailable = useCallback( async (scw) => {
-    // console.log('one', slideNumber, nOfSlides)
-    if (noMorePages) return
+    if (noMorePages) {
+      scw.slickNext()
+      return 
+    }
     
-    const res = await axios(`${LINKS.MOVIELISTS.TOPRATED}${nOfSlides}`, TMDBOptions)
-  
+    const res = await axios(`${LINKS.MOVIELISTS.TOPRATED}${nOfSlides+1}`, TMDBOptions)
   
     if (!res.data.results.length) {
       setNoMorePages(true)
-      return scw.update()
-    }
-    
-    if (nOfSlides - slideNumber <= 3) {
-      setNOfSlides(nOfSlides + 1)
     }
 
-    scw.update()
+    scw.slickNext()
 
-  }, [slideNumber, nOfSlides, setNOfSlides, setNoMorePages, setSlideNumber, noMorePages])
-    // async function checkIfNextIsAvailable(scw) {
-    // }
+  }, [nOfSlides, setNoMorePages, noMorePages])
   
 
-  useEffect(() => {
-    const scw = swiperElRef.current.swiper
-    setRealIndex(scw.realIndex)
 
-      setTimeout(() => {
-        console.log({realIndex, activeSlide, len: scw.slides.length})
-        scw.activeIndex = realIndex
-        scw.update()
-      })
-  }, [setRealIndex])
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    className: " bg-blue-500 ",
+
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+
+    beforeChange: (current, next) => {
+      setPrevSlide(current)
+    },
+
+    afterChange: (current) => {
+      if (!noMorePages && current>prevSlide && current+2 >= nOfSlides) {
+        setNOfSlides(nOfSlides + 1)
+      }
+    }
+
+  };
 
 
-  useEffect(() => {
-    const scw = swiperElRef.current.swiper
-    setRealIndex(scw.activeIndex)
-
-    
-    // console.log('active index: ', scw.activeIndex)
-    // setTimeout(() => {
-    //   scw.activeIndex = 2
-    //   scw.update()
-    // }, 2000)
-    // console.log('jjjjjjjjj', slideNumber, nOfSlides)
-
-
-    scw?.on('slideChange', function() {
-      
-      clearTimeout(id3)
-      
-      id3 = setTimeout(() => {
-        // console.log(this.touches.diff < 0);
-        // console.log('three', slideNumber, nOfSlides)
-  
-        if (this.touches.diff < 0) {
-          checkIfNextIsAvailable(scw)
-        } else {
-          scw.update()
-        }
-      }, 300)
-    });
-    scw?.on('slidePrevTransitionStart', function() {
-      // setSlideNumber(prev => prev - 1)
-      clearTimeout(id1)
-      
-      id1 = setTimeout(() => {
-        setSlideNumber(prev => prev - 1)
-        // console.log('prev')
-        scw.update()
-      }, 300)
-
-    });
-    scw?.on('slideNextTransitionStart', function() {
-      // setSlideNumber(prev => prev + 1)
-      clearTimeout(id2)
-
-      id2 = setTimeout(() => {
-        setSlideNumber(prev => prev + 1)
-        // console.log('next')
-      }, 300)
-      
-    });
-    scw?.on('progress', function() {
-      // console.log( this.progress);
-    });
-    
-    // console.log(slideNumber)
-    // console.log(scw)
-  }, [checkIfNextIsAvailable, setSlideNumber, setRealIndex])
-  
-  // console.log('two', slideNumber, nOfSlides)
-
-  const content = (
+  return (
     <div className="min-h-[800px]p bg-sky-900 ">
       <div className=" flex justify-between">
           <button type="button" 
-            onClick={() => swiperElRef.current.swiper.slidePrev()}
+            onClick={() => swiperElRef.current.slickPrev()}
             className=" bg-amber-400 rounded p-2 px-4 m-2" 
           >
             Prev
           </button>
           <button type="button" 
             onClick={() => {
-              swiperElRef.current.swiper.slideNext()
-              checkIfNextIsAvailable(swiperElRef.current.swiper)
+              checkIfNextIsAvailable(swiperElRef.current)
             }}
             className=" bg-green-400 rounded p-2 px-4 m-2" 
           >
@@ -136,20 +80,12 @@ export default function ScrollIntoViewContainer({ lastSlide, activeSlide, search
           </button>
       </div>
 
-      <swiper-container
-        ref={swiperElRef}
-        slides-per-view={1}
-        speed={1000}
-        navigation
-        pagination
-        // history
-        // loop
-      >
+      <Slider  {...settings} ref={swiperElRef}>
       
         {
           [...Array(nOfSlides)].map((_, i) => {
             return (
-                <ScrollIntoView 
+                <TopRatedMovieOrTVshowsSlide 
                   key={i} 
                   page={i+1}
                   nOfSlides={nOfSlides}
@@ -158,19 +94,19 @@ export default function ScrollIntoViewContainer({ lastSlide, activeSlide, search
               )
           })
         }
-      </swiper-container>
+      </Slider>
 
       <div className=" flex justify-between">
           <button type="button" 
-            onClick={() => swiperElRef.current.swiper.slidePrev()}
+            onClick={() => swiperElRef.current.slickPrev()}
             className=" bg-amber-400 rounded p-2 px-4 m-2" 
           >
             Prev
           </button>
+          <div>{isLoading && 'Loading...'}</div>
           <button type="button" 
             onClick={() => {
-              swiperElRef.current.swiper.slideNext()
-              checkIfNextIsAvailable(swiperElRef.current.swiper)
+              checkIfNextIsAvailable(swiperElRef.current)
             }}
             className=" bg-green-400 rounded p-2 px-4 m-2" 
           >
@@ -179,9 +115,6 @@ export default function ScrollIntoViewContainer({ lastSlide, activeSlide, search
       </div>
     </div>
   )
-
-  
-  return content
 }
 
 
@@ -666,14 +599,30 @@ const abc2 = {
   page > total_pages && !results.length // prev was the last page
  */
 
-function NextButton({swiperElRef}) {
 
+
+export function NextArrow(props) {
+  const { className, style, onClick } = props;
   return (
-    <button type="button" 
-    onClick={() => swiperElRef.current.swiper.slideNext()}
-    className=" bg-green-400 rounded p-2 px-4 m-2" 
-  >
-    Next
-  </button>
+    <div
+      className={className}
+      style={{ ...style, ...customStyles}}
+      onClick={onClick}
+    />
   );
+}
+
+export function PrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, ...customStyles}}
+      onClick={onClick}
+    />
+  );
+}
+
+const customStyles = {
+  display: "none", 
 }

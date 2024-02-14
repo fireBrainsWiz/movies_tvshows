@@ -12,6 +12,8 @@ export const signupSchema = z.object({
 
 export type SignupSchema = z.infer<typeof signupSchema>// created a type from the schema
 
+
+
 export const enum Discover {
   MOVIE = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
 
@@ -43,24 +45,46 @@ export const enum GENRES {
 
 export const LINKS = {
   MOVIELISTS: {
-    NOWPLAYING: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
-    POPULAR: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
+    NOWPLAYING: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=',
+    POPULAR: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=',
     TOPRATED: 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=',
-    UPCOMING: 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1'
+    UPCOMING: 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page='
   },
 
   TVLIST: {
-    AIRINGTODAY: 'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1',
-    ONTHEAIR: 'https://api.themoviedb.org/3/tv/on_the_air?language=en-US&page=1',
-    POPULAR: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=1',
-    TOPRATED: 'https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1'
+    AIRINGTODAY: 'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=',
+    ONTHEAIR: 'https://api.themoviedb.org/3/tv/on_the_air?language=en-US&page=',
+    POPULAR: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=',
+    TOPRATED: 'https://api.themoviedb.org/3/tv/top_rated?language=en-US&page='
   },
 
   TVDETAILS: 'https://api.themoviedb.org/3/tv/82856?language=en-US',
 
   POPULAR:  {
     MOVIE: 'https://api.themoviedb.org/3/movie/popular?language=en-US',
-    TV: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=1'
+    TV: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page='
+  }
+}
+
+export type GetLinks = {
+    _tvshows? : {
+      TVLIST: {
+        AIRINGTODAY: 'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=',
+        ONTHEAIR: 'https://api.themoviedb.org/3/tv/on_the_air?language=en-US&page=',
+        POPULAR: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=',
+        TOPRATED: 'https://api.themoviedb.org/3/tv/top_rated?language=en-US&page='
+      },
+      
+    },
+
+
+  _movies?: {
+    MOVIELISTS: {
+      NOWPLAYING: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=',
+      POPULAR: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=',
+      TOPRATED: 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=',
+      UPCOMING: 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page='
+    },
   }
 }
 
@@ -652,11 +676,11 @@ export const enum PLACEHOLDER_IMAGE {
 
 }
 
-type IMAGE = "https://image.tmdb.org/t/p/original"
+export const ImagePath = "https://image.tmdb.org/t/p/original"
 
 export type ResultType = {
-  adult: boolean
-  backdrop_path: IMAGE
+  adult: boolean 
+  backdrop_path: string
   genre_ids: number[]
   id: number
   origin_country: string[]
@@ -664,9 +688,23 @@ export type ResultType = {
   original_name: string
   overview: string
   popularity: number
-  poster_path: IMAGE
+  poster_path: string
   first_air_date: string
   title: string
+  name: string
   vote_average: number
   vote_count: number
+}
+
+export type TrailerType = {
+  "iso_639_1": string,
+  "iso_3166_1": string,
+  "name": string,
+  "key": string,
+  "site": string,
+  "size": number,
+  "type": string,
+  "official": boolean,
+  "published_at": string,
+  "id": string
 }

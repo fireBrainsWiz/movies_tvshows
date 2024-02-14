@@ -1,6 +1,6 @@
 
 import Image from "next/image"
-import useReactQuery from "../../hooks/useReactQuery"
+import useReactQuery from "../hooks/useReactQuery"
 import Link from "next/link"
 
 export default function BelowTheHeader() {
@@ -21,7 +21,7 @@ export default function BelowTheHeader() {
   // console.log(mandalorian.results[0])
   
   return (
-    <div className="bg-neutral-800 py-10">
+    <div className="bg-neutral-800p my-10 ">
       <Test />
       <Test2 />
     </div>
@@ -159,7 +159,7 @@ function Test() {
 
 function Test2() {
   return (
-    <svg width="100%" height="10%" viewBox="0 0 1246 170" fill="blue" xmlns="http://www.w3.org/2000/svg" className="my-9">
+    <svg width="100%" height="10%" viewBox="0 0 1246 170" fill="blue" xmlns="http://www.w3.org/2000/svg" className="mt-9">
 
     <foreignObject x="0" y="0" width="100%" height="100%" className="bg-amber-500p">
 
@@ -192,7 +192,7 @@ function Test2() {
         <Link href={`/card?title=1&id=2`}>
           <Image src={'/below-header/the-winter-king.png'} 
           alt="the-witcher" 
-          className="rounded-r-md"
+          className="rounded-r-mdp"
           width={930} height={495} />
         </Link>
       </div>

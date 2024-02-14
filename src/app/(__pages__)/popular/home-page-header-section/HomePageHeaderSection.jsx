@@ -1,14 +1,11 @@
-import '../styles/my-component.css'
-import { register, } from 'swiper/element/bundle';
 
-register();
 
 import MovieBanners from './MovieBanners';
-import NavLinks from './NavLinks';
-import AddToMyListButton from './AddToMyListButton';
+import NavLinks from '../../components/NavLinks';
+import AddToMyListButton from '../../components/AddToMyListButton';
 
 
-export default function HomePageHeaderSection() {
+export default function HomePageHeaderSection2() {
 //11440, 1920
   return (
     <div className=" w-full max-w-[1920px] mx-auto bg-neutral-900p">
