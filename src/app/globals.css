@@ -26,7 +26,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.slick-dots {
+  /* overflow: hidden !important; */
 
+}
 
 .slick-dots li.slick-active button:before
 {
@@ -75,4 +78,24 @@ button {
   border: none;
   border-bottom: 0.01px solid #8b8b8b72;
   margin-block: 50px;
+}
+
+
+li {
+  list-style-position: inside;
+}
+
+
+/* EMBLA */
+.embla {
+  overflow: hidden;
+  background: red;
+  width: 100%;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
 }

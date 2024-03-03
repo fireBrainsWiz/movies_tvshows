@@ -57,12 +57,12 @@ export default function RootLayout({
                           <canvas id="canvas"></canvas>
                         </main>
 
-                        <ImagesAndVideosContextProvider>
+                        {/* <ImagesAndVideosContextProvider> */}
                           <CardPage />
                           <Menu />
                           <AllImages />
                           <Search />
-                        </ImagesAndVideosContextProvider>
+                        {/* </ImagesAndVideosContextProvider> */}
 
                       </ThemeContextProvider>
                     </ToggleSearchContextProvider>

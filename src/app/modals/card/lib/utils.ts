@@ -46,7 +46,7 @@ type StarDirectorWriterType = [
   }[]
  ]
 
-export function starDirectorWriter(
+export function starDirectorWriterCreator(
   whereToLookFrom: MediaTypeInfoType['credits']
     | MediaTypeInfoType['details'],
   description: 'Star' | 'Director' | 'Writer' | null, 

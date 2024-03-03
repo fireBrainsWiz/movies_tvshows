@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/middleware.ts", "src/app/(__pages__)/components/ScrollIntoViewContainer.jsx", "src/app/(__pages__)/components/ScrollIntoView.jsx", "src/app/(__pages__)/home/CrimeDramaScifi.jsx", "src/app/(__pages__)/popular/most-popular/PopularMoviesOrTVshows.jsx", "src/app/modals/all-images-and-videos/AllImagesImage.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/middleware.ts", "src/app/(__pages__)/components/ScrollIntoViewContainer.jsx", "src/app/(__pages__)/components/ScrollIntoView.jsx", "src/app/(__pages__)/home/CrimeDramaScifi.jsx", "src/app/(__pages__)/popular/most-popular/PopularMoviesOrTVshows.jsx", "src/app/modals/all-images-and-videos/AllImagesImage.tsx", "src/app/(__pages__)/components/PrevAndNextArrows.tsx"],
   "exclude": ["node_modules"]
 }

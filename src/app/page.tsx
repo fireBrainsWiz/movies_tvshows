@@ -16,11 +16,11 @@ export default function Home() {
   const { moviesOrTVshows, links } = useContext(MoviesOrTVshowsLinksContext)
 
   return (
-    <div className=" bg-[#333232] pb-4p">
+    <div className=" bg-[#333232] overflow-x-hidden">
       {/* <HomePageHeaderSection /> */}
       {/* <BelowTheHeader /> */}
       {/* <PopularMoviesOrTVshows links={links}/> */}
-      {/* <CrimeDramaMystery /> */}
+      <CrimeDramaMystery />
     </div>
   )
 }

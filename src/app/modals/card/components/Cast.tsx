@@ -10,6 +10,9 @@ import useImagePixel from '@/app/(__pages__)/hooks/useImagePixel'
 
 import {steal} from '@/app/modals/card/lib/colorThief'
 
+
+
+
 export default function Cast(
   {cast, card}: {
     cast: MediaTypeInfoType['credits']['cast'],
@@ -24,7 +27,7 @@ export default function Cast(
 
 
   return (
-    <div className='text-sm grid grid-flow-col overflow-auto '>
+    <div className='w-full text-sm grid grid-flow-col overflow-x-auto justify-start pl-10'>
       {
         castItems.map((castItem) => (
           <CastItem
@@ -196,12 +199,12 @@ function CastItem(
     
 
     <foreignObject x="6" y="150.998" width="105" height="15" >
-      <div className="flex justify-center items-center h-full w-full bg-sky-600p  px-1 text-xs">
+      <p className="flex justify-center items-center h-full w-full bg-sky-600p  px-1 text-xs truncate ...">
         {
           personDetail.place_of_birth && 
           [...personDetail.place_of_birth.split(',')].reverse()[0]
         } 
-      </div>
+      </p>
     </foreignObject>
 
     </svg>

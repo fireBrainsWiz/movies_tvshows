@@ -1,19 +1,14 @@
-import { _TVshows, _Movies } from "@/app/(__pages__)/context/MoviesOrTVshowsLinksContext"
-import SlickSlider from "@/app/(__pages__)/popular/crime-drama-mystery/SlickSlider"
+import SlickSliderT2 from "@/app/(__pages__)/popular/crime-drama-mystery/SlickSliderT2"
 
 
-let timerId: any
 export default function Recommendations(
-  {id, links}: {id: number, links: _TVshows | _Movies}
+  {id}: {id: number}
   ) {
 
-    
   return (
     <div>
-      <SlickSlider 
+      <SlickSliderT2 
         genre={null} 
-        timerId={timerId}
-        links={links}
         title='recommendations'
         id={id}
       />

@@ -3,7 +3,7 @@
 import { createContext, PropsWithChildren, useState } from "react"
 
 const ImagesAndVideosContextDefaultValue = {
-  isVisibleAllImages: false,
+  isVisibleAllImages: true,
   setIsVisibleAllImages: (isVisibleAllImages: boolean) => {},
   isVisibleAllVideos: false,
   setIsVisibleAllVideos: (isVisibleAllVideos: boolean) => {}

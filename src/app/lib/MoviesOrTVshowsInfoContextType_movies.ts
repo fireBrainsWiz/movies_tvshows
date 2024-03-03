@@ -1550,3 +1550,48 @@ const personCredit = {
     "profile_path": "/aIB6XjNFDWxRpB2l5GKXWEzMI4O.jpg"
   }
 }
+
+
+
+
+
+/* 
+page: 1
+​​
+results: Array(20) [ {…}, {…}, {…}, … ]
+​​
+total_pages: 2
+​​
+total_results: 40 
+
+adult: false
+​​​​
+backdrop_path: "/euuK8owCrdiz0HMj8iVhhquPhDv.jpg"
+​​​​
+first_air_date: "2003-09-23"
+​​​​
+genre_ids: Array(3) [ 80, 18, 10759 ]
+​​​​
+id: 4614
+​​​​
+media_type: "tv"
+​​​​
+name: "NCIS"
+​​​​
+origin_country: Array [ "US" ]
+​​​​
+original_language: "en"
+​​​​
+original_name: "NCIS"
+​​​​
+overview: "From murder and espionage to terrorism and stolen submarines, a team of special agents investigates any crime that has a shred of evidence connected to Navy and Marine Corps personnel, regardless of rank or position."
+​​​​
+popularity: 849.955
+​​​​
+poster_path: "/2exOHePjOTquUsbThPGhuEjYTyA.jpg"
+​​​​
+vote_average: 7.6
+​​​​
+vote_count: 2137
+
+*/

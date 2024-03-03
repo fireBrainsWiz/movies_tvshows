@@ -1,120 +1,123 @@
 import Image from 'next/image';
 import { ResultType, PLACEHOLDER_IMAGE, ImagePath } from '@/app/lib/types';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import { IoImages } from "react-icons/io5";
 import { IoImageSharp } from "react-icons/io5";
 import { BiSolidVideos } from "react-icons/bi";
 import { RiVideoFill } from "react-icons/ri";
 import { _Movies, _TVshows } from '@/app/(__pages__)/context/MoviesOrTVshowsLinksContext'
 import useImagePixel from '@/app/(__pages__)/hooks/useImagePixel';
+import useAllImagesAndVideosStore from '../lib/all-images-and-videos-store/all-images-and-videos-store';
 
 
 
- function PosterAndOthers1(
-  { card, links }: { card: ResultType, links: _Movies | _TVshows }
-  ) {
+// function PosterAndOthers1(
+//   { card, links }: { card: ResultType, links: _Movies | _TVshows }
+//   ) {
 
-    const [noImageUrl, setNoImageUrl] = useState('')
+//     const [noImageUrl, setNoImageUrl] = useState('')
   
-  return (
-    <svg width="167" height="128" viewBox="0 0 167 128" fill="none" xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-[350px]"
-    >
-      <path d="M167 14.9116V17.9611C167 19.4247 165.811 20.6445 164.316 20.6445C162.822 20.6445 161.633 19.4551 161.633 17.9611V14.9116C161.633 9.66634 157.363 5.36608 152.087 5.36608H136.229C134.765 5.36608 133.545 4.1767 133.545 2.68264C133.545 1.18802 134.734 -0.000806691 136.229 -0.000806691L152.118 -0.000806691C160.321 0.0296053 167 6.70808 167 14.9116Z" fill="url(#paint0_linear_1039_40)"/>
-      <path d="M130.374 2.71209C130.374 4.17573 129.184 5.39553 127.69 5.39553L14.852 5.39553C9.60662 5.39553 5.30623 9.66538 5.30623 14.941V112.497C5.30623 117.742 9.57621 122.042 14.852 122.042L152.087 122.042C157.333 122.042 161.633 117.773 161.633 112.497V109.447C161.633 107.984 162.822 106.764 164.316 106.764C165.811 106.764 167 107.953 167 109.447V112.497C167 120.7 160.321 127.379 152.118 127.379L14.8824 127.379C6.67868 127.379 3.55e-06 120.7 3.55e-06 112.497V14.9106C3.55e-06 6.70712 6.67868 0.0286427 14.8824 0.0286427L127.69 0.0286427C129.154 0.0286427 130.374 1.24844 130.374 2.71209Z" fill="url(#paint1_linear_1039_40)"/>
+//   return (
+//     <svg width="167" height="128" viewBox="0 0 167 128" fill="none" xmlns="http://www.w3.org/2000/svg"
+//       className="w-full h-[350px]"
+//     >
+//       <path d="M167 14.9116V17.9611C167 19.4247 165.811 20.6445 164.316 20.6445C162.822 20.6445 161.633 19.4551 161.633 17.9611V14.9116C161.633 9.66634 157.363 5.36608 152.087 5.36608H136.229C134.765 5.36608 133.545 4.1767 133.545 2.68264C133.545 1.18802 134.734 -0.000806691 136.229 -0.000806691L152.118 -0.000806691C160.321 0.0296053 167 6.70808 167 14.9116Z" fill="url(#paint0_linear_1039_40)"/>
+//       <path d="M130.374 2.71209C130.374 4.17573 129.184 5.39553 127.69 5.39553L14.852 5.39553C9.60662 5.39553 5.30623 9.66538 5.30623 14.941V112.497C5.30623 117.742 9.57621 122.042 14.852 122.042L152.087 122.042C157.333 122.042 161.633 117.773 161.633 112.497V109.447C161.633 107.984 162.822 106.764 164.316 106.764C165.811 106.764 167 107.953 167 109.447V112.497C167 120.7 160.321 127.379 152.118 127.379L14.8824 127.379C6.67868 127.379 3.55e-06 120.7 3.55e-06 112.497V14.9106C3.55e-06 6.70712 6.67868 0.0286427 14.8824 0.0286427L127.69 0.0286427C129.154 0.0286427 130.374 1.24844 130.374 2.71209Z" fill="url(#paint1_linear_1039_40)"/>
 
-      <foreignObject x="8" y="8" width="87" height="111"
-      >
-        <div className="bg-[#ead40e] h-full rounded-l-md flex justify-center items-center  overflow-hidden">
-        <Image 
-        src={noImageUrl || ImagePath+card.poster_path}
-        alt=''
-        placeholder='blur'
-        blurDataURL={PLACEHOLDER_IMAGE.TMDB_IMAGE}
-        width={100} height={100}
-        onError={() => setNoImageUrl('/no-image.png')}
-      />
-        </div>
-      </foreignObject>
+//       <foreignObject x="8" y="8" width="87" height="111"
+//       >
+//         <div className="bg-[#ead40e] h-full rounded-l-md flex justify-center items-center  overflow-hidden">
+//         <Image 
+//         src={noImageUrl || ImagePath+card.poster_path}
+//         alt=''
+//         placeholder='blur'
+//         blurDataURL={PLACEHOLDER_IMAGE.TMDB_IMAGE}
+//         width={100} height={100}
+//         onError={() => setNoImageUrl('/no-image.png')}
+//       />
+//         </div>
+//       </foreignObject>
 
-      <foreignObject x="100" y="8" width="58" height="52"
-      >
-        <div 
-          className="bg-[#237b85]p h-full rounded-r-md text-xs grid grid-cols-4 gap-1 overflow-hidden relative">
+//       <foreignObject x="100" y="8" width="58" height="52"
+//       >
+//         <div 
+//           className="bg-[#237b85]p h-full rounded-r-md text-xs grid grid-cols-4 gap-1 overflow-hidden relative">
 
-          <span className="flex justify-center items-center bg-stone-400/20 absolute w-full h-full">
-            <IoImages size={30}/>
-          </span>
+//           <span className="flex justify-center items-center bg-stone-400/20 absolute w-full h-full">
+//             <IoImages size={30}/>
+//           </span>
 
-          {
-            [...Array(12)].map((_, i) => (
-              <span 
-                key={i}
-                className="flex justify-center items-center bg-gray-400 "
-              >
-                <IoImageSharp size={7}/>
-              </span>
-            ))
-          }
-        </div>
-      </foreignObject>
-
-
-      <rect  fill="#30643A"/>
-      <foreignObject x="100" y="66" width="58" height="52"
-      >
-        <div 
-          className="bg-[#237b85]p h-full rounded-r-md text-xs grid grid-cols-4 gap-1 overflow-hidden relative">
-
-          <span className="flex justify-center items-center bg-stone-400/20 absolute w-full h-full">
-            <BiSolidVideos size={30}/>
-          </span>
-
-          {
-            [...Array(12)].map((_, i) => (
-              <span 
-                key={i}
-                className="flex justify-center items-center bg-gray-400 "
-              >
-                <RiVideoFill size={7}/>
-              </span>
-            ))
-          }
-        </div>
-      </foreignObject>
-
-      <defs>
-        <linearGradient id="paint0_linear_1039_40" x1="191.224" y1="10.3371" x2="1.47593" y2="10.3371" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFC205"/>
-          <stop offset="1" stopColor="#FC0299"/>
-        </linearGradient>
-        <linearGradient id="paint1_linear_1039_40" x1="191.193" y1="63.7037" x2="1.44545" y2="63.7037" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFC205"/>
-          <stop offset="1" stopColor="#FC0299"/>
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
+//           {
+//             [...Array(12)].map((_, i) => (
+//               <span 
+//                 key={i}
+//                 className="flex justify-center items-center bg-gray-400 "
+//               >
+//                 <IoImageSharp size={7}/>
+//               </span>
+//             ))
+//           }
+//         </div>
+//       </foreignObject>
 
 
+//       <rect  fill="#30643A"/>
+//       <foreignObject x="100" y="66" width="58" height="52"
+//       >
+//         <div 
+//           className="bg-[#237b85]p h-full rounded-r-md text-xs grid grid-cols-4 gap-1 overflow-hidden relative">
 
-export default function PosterAndOthers(
-  { card, links, setIsVisibleAllImages, setIsVisibleAllVideos}:{
+//           <span className="flex justify-center items-center bg-stone-400/20 absolute w-full h-full">
+//             <BiSolidVideos size={30}/>
+//           </span>
+
+//           {
+//             [...Array(12)].map((_, i) => (
+//               <span 
+//                 key={i}
+//                 className="flex justify-center items-center bg-gray-400 "
+//               >
+//                 <RiVideoFill size={7}/>
+//               </span>
+//             ))
+//           }
+//         </div>
+//       </foreignObject>
+
+//       <defs>
+//         <linearGradient id="paint0_linear_1039_40" x1="191.224" y1="10.3371" x2="1.47593" y2="10.3371" gradientUnits="userSpaceOnUse">
+//           <stop stopColor="#FFC205"/>
+//           <stop offset="1" stopColor="#FC0299"/>
+//         </linearGradient>
+//         <linearGradient id="paint1_linear_1039_40" x1="191.193" y1="63.7037" x2="1.44545" y2="63.7037" gradientUnits="userSpaceOnUse">
+//           <stop stopColor="#FFC205"/>
+//           <stop offset="1" stopColor="#FC0299"/>
+//         </linearGradient>
+//       </defs>
+//     </svg>
+//   )
+// }
+
+
+
+export default memo( function PosterAndOthers(
+  { card, links}:{
     card: ResultType, 
     links: _Movies | _TVshows,
-    setIsVisibleAllImages: (isVisible: boolean) => void,
-    setIsVisibleAllVideos: (isVisible: boolean) => void 
   }
   ) {
 
     const imageRef = useRef<HTMLImageElement>(null)
+
+    const {setIsVisibleAllImages, setIsVisibleAllVideos} = useAllImagesAndVideosStore()
+
     const [noImageUrl, setNoImageUrl] = useState('')
     const [imageColor, setImageColor] = useState('')
 
     useImagePixel({ 
       card, imageRef, setColor: setImageColor 
     })
+
 
     function handleShowImagesClick() {
       setIsVisibleAllImages(true)
@@ -161,20 +164,17 @@ export default function PosterAndOthers(
       <foreignObject x="44" y="3" width="41" height="19" 
       >
         <button 
-          className="bg-[#8CFA9C]p h-full w-full text-xs grid grid-cols-6 justify-between overflow-hidden hover:bg-emerald-900 [transition:background-color_0.3s]"
+          className="bg-[#8CFA9C]p h-full w-full text-xs flex justify-center items-center overflow-hidden hover:bg-emerald-900 [transition:background-color_0.2s]"
             onClick={handleShowImagesClick}
           >
 
-          {
-            [...Array(12)].map((_, i) => (
-              <span 
-                key={i}
-                className="flex justify-center items-center bg-gray-400p "
-              >
-                <IoImageSharp size={5}/>
-              </span>
-            ))
-          }
+          <span className="grid justify-center content-center grid-cols-3 w-1/2"> 
+            {
+              [...Array(9)].map((_, i) => (
+                <IoImageSharp key={i} size={4.5}/>
+              ))
+            }
+          </span>
         </button>
       </foreignObject>
 
@@ -182,19 +182,16 @@ export default function PosterAndOthers(
       <foreignObject x="44" y="25" width="41" height="19"
       >
         <button 
-          className="bg-[#237b85]p h-full w-full text-xs grid grid-cols-6 justify-between overflow-hidden hover:bg-emerald-900 [transition:background-color_0.3s]"
+          className="bg-[#8CFA9C]p h-full w-full text-xs flex justify-center items-center overflow-hidden hover:bg-emerald-900 [transition:background-color_0.2s]"
             onClick={handleShowVideosClick}
           >
-          {
-            [...Array(12)].map((_, i) => (
-              <span 
-                key={i}
-                className="flex justify-center items-center bg-gray-400p "
-              >
-                <RiVideoFill size={5}/>
-              </span>
-            ))
-          }
+            <span className="grid justify-center content-center grid-cols-3 w-1/2  ">
+                {
+                  [...Array(9)].map((_, i) => (
+                      <RiVideoFill key={i} size={5}/>
+                  ))
+                }
+            </span>
         </button>
       </foreignObject>
 
@@ -210,5 +207,5 @@ export default function PosterAndOthers(
       </defs>
     </svg>
   )
-}
+})
 

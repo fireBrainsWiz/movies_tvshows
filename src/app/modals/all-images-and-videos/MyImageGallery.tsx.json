@@ -1,0 +1,191 @@
+[
+	{
+		"import React from 'react';": "import ImageGallery from \"react-image-gallery\";"
+	},
+	{
+		"import React from 'react';": "import \"react-image-gallery/styles/css/image-gallery.css\";"
+	},
+	{
+		"import React from 'react';": "import { ImagePath"
+	},
+	{
+		"import React from 'react';": "import { useEffect"
+	},
+	{
+		"import React from 'react';": "import { MediaTypeInfoType } from \"@/app/lib/MediaTypeInfoTypes\""
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": "export default function  MyImageGallery({"
+	},
+	{
+		"import React from 'react';": "  images"
+	},
+	{
+		"import React from 'react';": "  images: MediaTypeInfoType['images']['backdrops']"
+	},
+	{
+		"import React from 'react';": "  type: 'backdrops' | 'posters' | 'logos'"
+	},
+	{
+		"import React from 'react';": "}) {"
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": "  const items = images.map((image) =>({"
+	},
+	{
+		"import React from 'react';": "    original: ImagePath + image.file_path"
+	},
+	{
+		"import React from 'react';": "    thumbnail: ImagePath + image.file_path"
+	},
+	{
+		"import React from 'react';": "  }))"
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": "  return ("
+	},
+	{
+		"import React from 'react';": "    <div className=\"w-full max-w-[1280px] mx-auto\"> "
+	},
+	{
+		"import React from 'react';": "      <ImageGallery "
+	},
+	{
+		"import React from 'react';": "        items={items} "
+	},
+	{
+		"import React from 'react';": "        additionalClass='w-full bg-red-500 h-[90%]'"
+	},
+	{
+		"import React from 'react';": "      />"
+	},
+	{
+		"import React from 'react';": "    </div>"
+	},
+	{
+		"import React from 'react';": "  );"
+	},
+	{
+		"import React from 'react';": "}"
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": ""
+	},
+	{
+		"import React from 'react';": "const  breakpoints = {"
+	},
+	{
+		"import React from 'react';": "  0: {"
+	},
+	{
+		"import React from 'react';": "    items: 1"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  320: {"
+	},
+	{
+		"import React from 'react';": "    items: 2"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  576: {"
+	},
+	{
+		"import React from 'react';": "    items: 3"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  768: {"
+	},
+	{
+		"import React from 'react';": "    items: 4"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  1024: {"
+	},
+	{
+		"import React from 'react';": "    items: 6"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  1280: {"
+	},
+	{
+		"import React from 'react';": "    items: 8"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  1536: {"
+	},
+	{
+		"import React from 'react';": "    items: 10"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  1600: {"
+	},
+	{
+		"import React from 'react';": "    items: 12"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  1920: {"
+	},
+	{
+		"import React from 'react';": "    items: 15"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "  2560: {"
+	},
+	{
+		"import React from 'react';": "    items: 20"
+	},
+	{
+		"import React from 'react';": "  }"
+	},
+	{
+		"import React from 'react';": "}"
+	},
+	{
+		"import React from 'react';": ""
+	}
+]

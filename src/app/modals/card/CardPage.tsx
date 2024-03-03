@@ -13,21 +13,28 @@ import {getInfoDataFromAxios} from "../../(__pages__)/hooks/getDataFromAxios";
 import { TMDBOptions } from "../../client/helpers/TMDB_API";
 import {MediaTypeInfoType} from '@/app/lib/MediaTypeInfoTypes'
 import { 
-  starDirectorWriter, getTrailer, getFirstXItems, calculateRuntime
+  starDirectorWriterCreator, getTrailer, getFirstXItems, calculateRuntime
 } from "./lib/utils";
 
-import { BackdropImage } from "./components/BackdropImage";
+import BackdropImage  from "./components/BackdropImage";
 import Recommendations from "./components/Recommendations";
 import Similar from "./components/Similar";
 import Cast from "./components/Cast";
 import Starring from "./components/Starring";
 import PosterAndOthers from "./components/PosterAndOthers";
 import ThemeContext from "@/app/(__pages__)/context/ThemeContext";
-import ImagesAndVideosContext from "@/app/(__pages__)/context/ImagesAndVideosContext";
+// import ImagesAndVideosContext from "@/app/(__pages__)/context/ImagesAndVideosContext";
+import StarDirectorWriterCreator from "./components/StarDirectorWriterCreator";
+import SpokenLanguages from "./components/SpokenLanguages";
+import Keywords from "./components/Keywords";
+import Trailer from "./components/Trailer";
+import TitleImage from "./components/TitleImage";
 
 
-let scrollThrottleTimer: any
+let scrollThrottleTimer: ReturnType<typeof setTimeout>
+
 export default function CardPage() {
+
 
   const sectionRef = useRef<HTMLElement>(null)
   
@@ -38,7 +45,7 @@ export default function CardPage() {
   const {
     details, setDetails, credits, 
     setCredits, contentRatings, setContentRatings,
-    keywords, setKeywords, 
+    keywords, setKeywords, images, setImages,
   } = useContext(MoviesOrTVshowsInfoContext)!
 
 
@@ -47,16 +54,16 @@ export default function CardPage() {
     isLoadingBackdropImage, setIsLoadingBackdropImage
   } = useContext(ThemeContext)
 
-  const {
-    isVisibleAllImages, setIsVisibleAllImages,
-    isVisibleAllVideos, setIsVisibleAllVideos
-  } = useContext(ImagesAndVideosContext)
+  // const {
+  //   setIsVisibleAllImages,
+  //   setIsVisibleAllVideos
+  // } = useContext(ImagesAndVideosContext)
 
   // const [isLoadingImage, setIsLoadingImage] = useState(true)
   const [trailers, setTrailers] = useState<TrailerType[]>([])
   const [rating, setRating] = useState('')
   
-
+  // console.log(images.logos)
   // let m = 0
   // console.log({m: m++})
 
@@ -93,6 +100,8 @@ export default function CardPage() {
       behavior: "smooth",
     });
   }
+
+
 
   useEffect(() => {
     if (card.backdrop_path) return
@@ -263,6 +272,33 @@ export default function CardPage() {
   }, [links, card.id, isVisibleCardPage])
 
 
+  //getAllImages
+  useEffect(() => {
+    if(!isVisibleCardPage || !card?.id) return
+
+    async function getImages() {
+      try {
+        const {data}: {data: typeof images} = await axios(
+          `${
+            links.INFOS.images.beforeStr}${card.id}${links.INFOS.images.afterStr
+            }`,
+          TMDBOptions
+        ) 
+        // console.log(data)
+        setImages(data)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }  
+    getImages()
+  }, [
+    isVisibleCardPage, setImages, card.id, 
+    links.INFOS.images.beforeStr, links.INFOS.images.afterStr
+  ])
+
+
+
   if (!isVisibleCardPage) return null
 
   // console.log('cast', credits.cast)
@@ -280,7 +316,7 @@ export default function CardPage() {
         </button>
       </div>
 
-      <div className="border border-stone-500 relative grid grid-cols-[100%] grid-flow-row md:grid-cols-[65%_35%] ">
+      <div className="borderp border-stone-500 relative grid grid-cols-[100%] grid-flow-row md:grid-cols-[65%_35%] ">
 
         <div className="bg-cyan-600p ">
           <BackdropImage 
@@ -295,33 +331,19 @@ export default function CardPage() {
             <div className="w-full h-full bg-red-500p absolute top-0 left-0 z-[-1] opacity-30"
               style={{backgroundColor: backdropImageColor}}
             ></div>
-            <h1 className="text-4xl font-black p-4p mb-2 bg-red-500p">
-              {card.title || card.name}
-            </h1>
+
+            <div className="flex justify-between gap-4">
+              <h1 className="text-4xl font-black p-4p mb-2 bg-red-500p">
+                {card.title || card.name}
+              </h1>
+              <TitleImage card={card} images={images} />
+            </div>
+
             <p className="mb-8 italic">{details.tagline}</p>
 
             <span className="text-2xl">A {links.MEDIATYPE} about:</span>
             <ul className="bg-sky-800p w-full mb-4 flex flex-wrap gap-x-10 p-4">
-                {
-                  'keywords' in keywords 
-                  ? (
-                      keywords.keywords.map((keyword, i) => (
-                        <li key={keyword.id} className="list-disc">
-                          {keyword.name}
-                        </li>
-                      ))
-                    )
-                    
-                    : 'results' in keywords 
-                    ? (
-                      keywords.results.map((result, i) => (
-                        <li key={i} className="list-disc">
-                          {result.name}
-                        </li>
-                      ))
-                    )
-                    : null
-                }
+                <Keywords keywords={keywords} />
             </ul>
           </div>
 
@@ -399,27 +421,11 @@ export default function CardPage() {
                 <PosterAndOthers 
                   card={card}
                   links={links}
-                  setIsVisibleAllImages={setIsVisibleAllImages}
-                  setIsVisibleAllVideos={setIsVisibleAllVideos}
                 />
               )
             }
 
-            {
-              trailers?.[0] ?  (
-              <iframe
-                title={trailers[0]?.name}
-                key={trailers[0]?.key}
-                className="w-[95%] mx-auto min-h-[216px]"
-                src={`https://www.${trailers[0]?.site}.com/embed/${trailers[0]?.key}`}
-              >
-                <p>Your browser does not support iframes.</p>
-              </iframe>
-            )
-            : (
-              <div className="w-full h-[150px] mx-auto flex items-center justify-center  text-center italic">Sorry, no traliers available 😢</div>
-              )
-            }
+            <Trailer trailers={trailers} />
           </div>
           
           
@@ -427,99 +433,21 @@ export default function CardPage() {
 
       </div>
 
-      <div className="my-10 ">
+      <div className="my-10">
+        <StarDirectorWriterCreator 
+          credits={credits} details={details}
+        />
+      
+        <SpokenLanguages details={details} />
 
-          {/* starDirectorWriter */}
-          {
-            credits.crew &&
-            starDirectorWriter(details, null)[0] &&
+        <p className=" mx-4 text-xl">Cast: </p>
+        {
+          credits.cast &&
+          <Cast cast={credits.cast} card={card}/>  
+        }
 
-            <div className="flex flex-wrap gap-x-4 m-4">
-              <span className="mr-4">
-                {
-                  starDirectorWriter(details, null)[0]
-                }
-              </span> 
-              <ul className=" flex flex-wrap gap-x-10 ">
-                {
-                  starDirectorWriter(details, null)[1]?.map(
-                    star => (
-                    <li key={star.id} className="list-disc">
-                      {star.name}
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          }
-          
-          {
-            credits.crew && 
-            starDirectorWriter(credits, 'Director')[0] &&
-            
-            <div className="flex flex-wrap gap-x-4 m-4">
-                <span className="mr-4">
-                {
-                  starDirectorWriter(credits, 'Director')[0]
-                }
-              </span> 
-              <ul className="flex flex-wrap gap-x-10 ">
-                {
-                  starDirectorWriter(credits, 'Director')[1]?.map(
-                    star => (
-                    <li key={star.id} className="list-disc">
-                      {star.name}
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          }
-        
-          {
-            credits.crew && 
-            starDirectorWriter(credits, 'Writer')[0] &&
-
-            <div className="flex flex-wrap gap-x-4 m-4">
-              <span className="mr-4">
-                {
-                  starDirectorWriter(credits, 'Writer')[0]
-                }
-              </span> 
-              <ul className=" flex flex-wrap gap-x-10">
-                {
-                  starDirectorWriter(credits, 'Writer')[1]?.map(
-                    star => (
-                    <li key={star.id} className="list-disc">
-                      {star.name}
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          }
-        
-          {/* Spoken languages: */}
-          <p className="my-10 mx-4">
-            Spoken languages: {
-            details.spoken_languages && details.spoken_languages.map((language) => (
-              `${language.english_name} (${language.iso_639_1})`
-            )).join(', ')
-            }
-          </p>
-
-          <p className=" mx-4 text-xl">Cast: </p>
-          {
-            credits.cast &&
-            <Cast 
-              cast={credits.cast} 
-              card={card}
-            />  
-          }
-
-          {/* recommendations: */}
-          <Recommendations id={card.id} links={links} />
-          <Similar id={card.id} links={links} />
+        <Recommendations id={card.id} />
+        <Similar id={card.id} />
             
         
         {/* <Iframes trailers={trailers}/> */}
