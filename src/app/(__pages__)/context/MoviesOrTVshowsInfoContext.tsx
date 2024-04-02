@@ -26,11 +26,15 @@ export function  MoviesOrTVshowsInfoContextProvider(
 
     const [similar, setSimilar] = useState({} as MediaTypeInfoType['similar'])
 
+    const [images, setImages] = useState({} as MediaTypeInfoType['images'])
+    
     const [personDetails, setPersonDetails] = useState({} as MediaTypeInfoType['personDetails'])
 
-    const [images, setImages] = useState({} as MediaTypeInfoType['images'])
+    const [personMovieCredits, setPersonMovieCredits] = useState({} as MediaTypeInfoType['personMovieCredits'])
 
-  
+    const [personTVshowCredits, setPersonTVshowCredits] = useState({} as MediaTypeInfoType['personTVshowCredits'])
+
+
     
     const value = {
       details, setDetails,
@@ -39,8 +43,10 @@ export function  MoviesOrTVshowsInfoContextProvider(
       keywords, setKeywords,
       recommendations, setRecommendations,
       similar, setSimilar,
+      images, setImages,
       personDetails, setPersonDetails,
-      images, setImages
+      personMovieCredits, setPersonMovieCredits,
+      personTVshowCredits, setPersonTVshowCredits
     }
     
   return (

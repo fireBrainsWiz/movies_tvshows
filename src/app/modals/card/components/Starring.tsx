@@ -7,6 +7,8 @@ import { TMDBOptions } from '@/app/client/helpers/TMDB_API'
 import MoviesOrTVshowsLinksContext from '@/app/(__pages__)/context/MoviesOrTVshowsLinksContext'
 import { IoStar } from "react-icons/io5";
 import useImagePixel from "@/app/(__pages__)/hooks/useImagePixel";
+import ToggleShowPersonContext from '@/app/(__pages__)/context/ToggleShowPersonContext'
+
 
 
 export default function Starring(
@@ -20,7 +22,7 @@ export default function Starring(
       {
         stars.map((star, i) => (
           !('job' in star) && <li key={i} 
-            className="bg-red-400p flex items-start gap-2 my-3 mx-2 md:mx-0 justify-center"
+            className="flex items-start justify-center"
           >
             <Star castItem={star} card={card}/>
           </li>
@@ -42,6 +44,10 @@ function Star(
     
     const {links} = useContext(MoviesOrTVshowsLinksContext)
 
+    const {
+      setIsVisiblePerson, setPersonDetails
+    } = useContext(ToggleShowPersonContext)
+
     const [personDetail, setPersonDetail] = 
     useState({} as MediaTypeInfoType['personDetails']) 
     const [noImageUrl, setNoImageUrl] = useState('')
@@ -54,6 +60,7 @@ function Star(
       card: myCard, imageRef, setColor: setImageColor
     })
 
+    // console.log({...castItem, ...personDetail})
 
     useEffect(() => {
       try {
@@ -78,7 +85,13 @@ function Star(
      */
 
   return (
-    <svg width="172" height="159" viewBox="0 0 172 159" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="172" height="159" viewBox="0 0 172 159" fill="none" xmlns="http://www.w3.org/2000/svg"
+    className='cursor-pointer m-6p'
+    onClick={() => {
+      setIsVisiblePerson(true)
+      setPersonDetails(personDetail)
+    }}
+    >
       <path d="M24.0291 22.0577L19.7352 17.7637C15.4413 23.5907 12.681 30.6457 12.3742 38.0067H9.30715C4.09314 38.0067 0.105957 41.9937 0.105957 47.2077L0.105957 145.353C0.105957 150.568 4.09314 154.555 9.30715 154.555H126.162V148.421H9.30715C7.46691 148.421 6.24008 147.194 6.24008 145.353L6.24008 47.2077C6.24008 45.3677 7.46691 44.1407 9.30715 44.1407H12.3742C12.9877 51.5017 15.4413 58.5557 19.7352 64.3831L24.0291 60.0892C20.3486 54.5685 18.2016 48.1277 18.2016 41.0737C18.2016 34.0187 20.3486 27.2717 24.0291 22.0577Z" fill={imageColor}/>
       <path d="M162.353 44.1407C164.193 44.1407 165.42 45.3677 165.42 47.2077V145.353C165.42 147.194 164.193 148.421 162.353 148.421H157.139V154.555H162.353C167.567 154.555 171.554 150.568 171.554 145.353V47.2077C171.554 41.9937 167.567 38.0067 162.353 38.0067H157.139V44.1407H162.353Z" fill={imageColor}/>
       <path d="M94.8774 38.0066V44.1406H125.548V38.0066H94.8774Z" fill={imageColor}/>
@@ -112,20 +125,24 @@ function Star(
       <div className="flex justify-between items-center h-full w-full rounded-md"
         style={{color: imageColor}}
       >
-      { personDetail.birthday && 
-        <>
-          <span>(</span>
-          <span className="text-sm italic text-white">
-            {
-            `${
-              new Date().getFullYear() -
+        <span>(</span>
+        <span className="text-sm italic text-white">
+          {
+            personDetail?.deathday && 
+            personDetail?.birthday
+            ? (
+              Number(personDetail.deathday.slice(0,4)) -
               Number(personDetail.birthday.slice(0,4))
-            }`
-            }
-          </span>
-          <span>)</span>
-        </>
-      } 
+            )
+            : personDetail?.birthday
+              ? (
+                new Date().getFullYear() -
+                Number(personDetail.birthday.slice(0,4))
+              )
+              : <span className="text-[9px]">N/A</span>
+          }
+        </span>
+        <span>)</span>
       </div>
     </foreignObject>
 

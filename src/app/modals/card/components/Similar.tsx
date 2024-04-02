@@ -1,4 +1,4 @@
-import SlickSliderT2 from "@/app/(__pages__)/popular/crime-drama-mystery/SlickSliderT2"
+import SlickSlider from "@/app/(__pages__)/popular/crime-drama-mystery/SlickSlider"
 
 
 export default function Similar(
@@ -7,7 +7,7 @@ export default function Similar(
     
   return (
     <div>
-      <SlickSliderT2 
+      <SlickSlider 
         genre={null} 
         title='similar'
         id={id}

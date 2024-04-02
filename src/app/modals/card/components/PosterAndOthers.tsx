@@ -118,6 +118,9 @@ export default memo( function PosterAndOthers(
       card, imageRef, setColor: setImageColor 
     })
 
+    // useEffect(() => {
+    //   setIsVisibleAllImages(true)
+    // }, [setIsVisibleAllImages])
 
     function handleShowImagesClick() {
       setIsVisibleAllImages(true)

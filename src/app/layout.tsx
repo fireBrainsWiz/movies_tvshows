@@ -11,12 +11,14 @@ import {CardBeingViewedContextProvider} from './(__pages__)/context/CardBeingVie
 import { ToggleMenuContextProvider } from './(__pages__)/context/ToggleMenuContext'
 import Menu from './modals/Menu'
 import { ToggleSearchContextProvider } from './(__pages__)/context/ToggleSearchContext'
-import Search from './modals/Search'
+import Search from './modals/search/Search'
 import { MoviesOrTVshowsLinksContextProvider } from './(__pages__)/context/MoviesOrTVshowsLinksContext'
 import { MoviesOrTVshowsInfoContextProvider } from './(__pages__)/context/MoviesOrTVshowsInfoContext'
 import { ThemeContextProvider } from './(__pages__)/context/ThemeContext'
 import { ImagesAndVideosContextProvider } from './(__pages__)/context/ImagesAndVideosContext'
 import AllImages from './modals/all-images-and-videos/AllImages'
+import {ToggleShowPersonContextProvider } from './(__pages__)/context/ToggleShowPersonContext'
+import Person from './modals/card/components/person/Person'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -57,12 +59,13 @@ export default function RootLayout({
                           <canvas id="canvas"></canvas>
                         </main>
 
-                        {/* <ImagesAndVideosContextProvider> */}
-                          <CardPage />
-                          <Menu />
-                          <AllImages />
+                        <ToggleShowPersonContextProvider>
+                          {/* <Menu /> */}
                           <Search />
-                        {/* </ImagesAndVideosContextProvider> */}
+                          <CardPage />
+                          <Person />
+                          {/* <AllImages /> */}
+                        </ToggleShowPersonContextProvider>
 
                       </ThemeContextProvider>
                     </ToggleSearchContextProvider>

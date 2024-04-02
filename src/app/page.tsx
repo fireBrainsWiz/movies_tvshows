@@ -17,10 +17,10 @@ export default function Home() {
 
   return (
     <div className=" bg-[#333232] overflow-x-hidden">
-      {/* <HomePageHeaderSection /> */}
+      <HomePageHeaderSection />
       {/* <BelowTheHeader /> */}
       {/* <PopularMoviesOrTVshows links={links}/> */}
-      <CrimeDramaMystery />
+      {/* <CrimeDramaMystery /> */}
     </div>
   )
 }

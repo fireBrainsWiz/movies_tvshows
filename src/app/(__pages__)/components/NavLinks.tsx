@@ -21,6 +21,12 @@ export default function NavLinks() {
     setIsVisibleMenu(true)
     document.body.style.overflow = 'hidden'
   }
+
+  
+
+  // useEffect(() => {
+  //   setIsVisibleSearch(true)
+  // }, [setIsVisibleSearch])
   
   return (
     <div className='bg-amber-500p min-h-[50px] grid grid-cols-[70%_30%] grid-flow-col items-center justify-between px-3 text-3xl text-white absolute top-0 w-full z-10'>

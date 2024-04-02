@@ -209,5 +209,18 @@ export type SimilarTVshows = {
   "total_results": number
 }
 
+
 // ?...
 
+export type PersonTVshowCredits = {
+  id : number,
+  cast : (Omit<SimilarTVshows['results'][0], 'media_type'> & {
+    character : string,
+    credit_id : string,
+    episode_count : number,
+  })[],
+  crew : (Omit<PersonTVshowCredits['cast'][0], 'character'> & {
+    department : string,
+    job : string
+  })[]
+}

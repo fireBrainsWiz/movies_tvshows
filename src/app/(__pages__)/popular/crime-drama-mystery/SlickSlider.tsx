@@ -17,7 +17,7 @@ type Data = {
   total_results: number
 }
 
-export default function SlickSliderT2({
+export default function SlickSlider({
   genre,  title='details', id=0
 }: {
   genre: Genre | null,
@@ -38,7 +38,14 @@ export default function SlickSliderT2({
   const [isLoadingNewSlides, setIsLoadingNewSlides] = useState(false)
 
   const {links} = useContext(MoviesOrTVshowsLinksContext)
+  
 
+  useEffect(() => {
+    setData({} as Data)
+    
+  }, [
+    links.CRIMEDRAMASCIFI.crime, links.CRIMEDRAMASCIFI.drama, links.CRIMEDRAMASCIFI.mystery
+  ])
 
   // getData API calls
   useEffect(() => {
@@ -125,8 +132,12 @@ export default function SlickSliderT2({
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: numOfSlidesPerRow,
-    slidesToScroll: numOfSlidesPerRow,
+    
+    slidesToShow: data.results?.length < numOfSlidesPerRow 
+    ? data.results?.length : numOfSlidesPerRow,
+    slidesToScroll: data.results?.length < numOfSlidesPerRow 
+    ? data.results?.length : numOfSlidesPerRow,
+
     className: "slides bg-blue-500p ",
 
     prevArrow: <PrevArrow />,
@@ -134,6 +145,14 @@ export default function SlickSliderT2({
 
     beforeChange: (current: number, next: number) => {
       setPrevSlide(current)
+
+      const slides = slideRef.current?.props?.children as 
+      React.ReactNode[]
+      if(!slides) return
+
+      if (next>current && next + numOfSlidesPerRow >= slides.length && !isLastSlide) {
+        setIsLoadingNewSlides(true)
+      }
     },
 
     afterChange: (current: number) => {
@@ -142,13 +161,13 @@ export default function SlickSliderT2({
       if(!slides) return
 
       if (current>prevSlide && current + numOfSlidesPerRow >= slides.length && !isLastSlide) {
-        setIsLoadingNewSlides(true)
         setPage(prev => prev + 1)
       }
     },
 
   };
 
+  if (!data?.results?.[0]) return null
 
   return (
     <div className="bg-red-500p my-5  px-7 ">
@@ -184,7 +203,7 @@ const sizes = {
 
 function getNumOfSlidesPerRow() {
   return ( 
-    window.innerWidth <= sizes.xs
+    typeof window !== 'undefined' && window.innerWidth <= sizes.xs
     ? 2 : innerWidth <= sizes.sm
     ? 4 : innerWidth <= sizes.md
     ? 6 : innerWidth <= sizes.lg

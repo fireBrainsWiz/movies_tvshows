@@ -1,18 +1,31 @@
-import { useEffect, useRef, useContext } from "react"
+import { useEffect, useRef, useContext, useState } from "react"
 import { MdKeyboardArrowDown } from "react-icons/md"
 import MoviesOrTVshowsLinksContext from "../context/MoviesOrTVshowsLinksContext"
+import ToggleSearchContext from "../context/ToggleSearchContext"
+import CardBeingViewedContext from "../context/CardBeingViewedContext"
 
 
 export default function SelectMoviesOrTVshows() {
   const span = useRef<HTMLSpanElement | null>(null)
   const select = useRef<HTMLSelectElement | null>(null)
+  
+  const { setMoviesOrTVshows, moviesOrTVshows } = useContext(MoviesOrTVshowsLinksContext)
 
-  const { setMoviesOrTVshows } = useContext(MoviesOrTVshowsLinksContext)
+  const {isVisibleCardPage} = useContext(CardBeingViewedContext)
 
+  const {isVisibleSearch, setIsVisibleSearch,} = useContext(ToggleSearchContext)
+
+  const [moviesOrTVshowsDefaultsTo, setMoviesOrTVshowsDefaultsTo] = useState('tvshows')
+  
+
+  // useEffect(() => {
+  //   setIsVisibleSearch(true)
+  // }, [setIsVisibleSearch])
+  
+  
   useEffect(() => {
     if (!span.current || !select.current) return
     const spanElem = span.current as HTMLSpanElement 
-    const selectElem = select.current as HTMLSelectElement
     
     const onWindowClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
@@ -24,24 +37,37 @@ export default function SelectMoviesOrTVshows() {
       }
     }
 
-    function onSelectChange(e: Event) {
-      const target = e.target as HTMLSelectElement
-      setMoviesOrTVshows(target.value)
-    }
 
-    selectElem.addEventListener('change', onSelectChange)
     addEventListener('click', onWindowClick)
 
     return () => {
       removeEventListener('click', onWindowClick)
-      selectElem.removeEventListener('change', onSelectChange)
     }
   }, [span, select, setMoviesOrTVshows])
+
+  useEffect(() => {
+    if (!isVisibleSearch || !isVisibleCardPage) {
+      setMoviesOrTVshows(moviesOrTVshowsDefaultsTo)
+    }
+  }, [
+    moviesOrTVshowsDefaultsTo, isVisibleSearch, setMoviesOrTVshows,
+    isVisibleCardPage, 
+  ])
+
   
   return (
-    <div className="grid grid-flow-col items-center bg-green-500p  relative isolate">
+    <form 
+      onSubmit={(e) => e.preventDefault()} 
+      className="grid grid-flow-col items-center bg-green-500p  relative isolate">
       <label htmlFor="video-types"></label>
-      <select name="video-types" id="video-types" ref={select}>
+      <select 
+        name="video-types" id="video-types" ref={select}
+        value={moviesOrTVshows}
+        onChange={(e) => {
+          setMoviesOrTVshows(e.target.value)
+          setMoviesOrTVshowsDefaultsTo(e.target.value)
+        }}
+        >
         <option value="tvshows">TV Shows</option>
         <option value="movies">Movies</option>
       </select> 
@@ -51,6 +77,6 @@ export default function SelectMoviesOrTVshows() {
       >
         <MdKeyboardArrowDown size={40}/>  
       </span>
-    </div>
+    </form>
   )
 }

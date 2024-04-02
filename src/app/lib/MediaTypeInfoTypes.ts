@@ -1,11 +1,13 @@
 import {
   MovieDetails, MovieCredits, MovieReleaseTypesAndStatusesAsContentRatings,
-  MovieKeywords, MovieRecommendations, SimilarMovies
+  MovieKeywords, MovieRecommendations, SimilarMovies,
+  PersonMovieCredits
 } from './MoviesOrTVshowsInfoContextType_movies'
 
 import {
   TVshowsDetails, TVshowsCredits, TVshowsContentRatings,
-  TVshowsKeywords, TVshowsRecommendations, SimilarTVshows
+  TVshowsKeywords, TVshowsRecommendations, SimilarTVshows,
+  PersonTVshowCredits
 } from './MoviesOrTVshowsInfoContextType_tvshows'
 
 
@@ -27,6 +29,18 @@ type CommonTypes = {
       "place_of_birth": string,
       "popularity": number,
       "profile_path": string
+    },
+    images: {
+      "id": number,
+      "profiles": {
+        "aspect_ratio": number,
+        "height": number,
+        "iso_639_1": string,
+        "file_path": string,
+        "vote_average": number,
+        "vote_count": number,
+        "width": number
+      }[]
     }
   }
 
@@ -85,10 +99,18 @@ export type MediaTypeInfoType = {
 
   similar: SimilarMovies | SimilarTVshows
   setSimilar: (similar: SimilarMovies | SimilarTVshows) => void
+  
+  images: CommonTypes['Images']
+  setImages: (images: CommonTypes['Images']) => void
+  
 
+  // ??......
   personDetails: CommonTypes['Person']['details']
   setPersonDetails: (personDetails: CommonTypes['Person']['details']) => void
 
-  images: CommonTypes['Images']
-  setImages: (images: CommonTypes['Images']) => void
+  personMovieCredits: PersonMovieCredits
+  setPersonMovieCredits: (personMoviesCredits: PersonMovieCredits) => void
+
+  personTVshowCredits: PersonTVshowCredits
+  setPersonTVshowCredits: (personTVshowsCredits: PersonTVshowCredits) => void
 } 

@@ -8,20 +8,22 @@ type CommonTypes = {
     drama: string,
     mystery: string
   },
-  INFO: {
+  INFOS: {
     BEFOREAFTER: {
       beforeStr: string,
       afterStr: string
     }
     MAIN: {
-      details:CommonTypes['INFO']['BEFOREAFTER'],
-      credits: CommonTypes['INFO']['BEFOREAFTER'],
-      contentRatings: CommonTypes['INFO']['BEFOREAFTER'],
-      keywords: CommonTypes['INFO']['BEFOREAFTER'],
-      recommendations: CommonTypes['INFO']['BEFOREAFTER'],
-      similar: CommonTypes['INFO']['BEFOREAFTER'],
-      personDetails: CommonTypes['INFO']['BEFOREAFTER'],
-      images: CommonTypes['INFO']['BEFOREAFTER'],
+      details:CommonTypes['INFOS']['BEFOREAFTER'],
+      credits: CommonTypes['INFOS']['BEFOREAFTER'],
+      contentRatings: CommonTypes['INFOS']['BEFOREAFTER'],
+      keywords: CommonTypes['INFOS']['BEFOREAFTER'],
+      recommendations: CommonTypes['INFOS']['BEFOREAFTER'],
+      similar: CommonTypes['INFOS']['BEFOREAFTER'],
+      images: CommonTypes['INFOS']['BEFOREAFTER'],
+      personDetails: CommonTypes['INFOS']['BEFOREAFTER'],
+      personMovieCredits: CommonTypes['INFOS']['BEFOREAFTER'],
+      personTVshowCredits: CommonTypes['INFOS']['BEFOREAFTER'],
     }
   }
 }
@@ -40,7 +42,7 @@ export type _Movies = {
   
   TRAILERS: string,
 
-  INFOS: CommonTypes['INFO']['MAIN']
+  INFOS: CommonTypes['INFOS']['MAIN']
 }
 
 export type _TVshows = {
@@ -57,7 +59,7 @@ export type _TVshows = {
 
   TRAILERS: string,
 
-  INFOS: CommonTypes['INFO']['MAIN'],
+  INFOS: CommonTypes['INFOS']['MAIN'],
 
 }
 
@@ -111,13 +113,21 @@ const allLinks = {
         beforeStr: 'https://api.themoviedb.org/3/tv/',
         afterStr: '/similar?language=en-US&page='
       },
+      images: {
+        beforeStr: 'https://api.themoviedb.org/3/tv/',
+        afterStr: '/images'
+      },
       personDetails: {
         beforeStr: 'https://api.themoviedb.org/3/person/',
         afterStr: '?language=en-US'
       },
-      images: {
-        beforeStr: 'https://api.themoviedb.org/3/tv/',
-        afterStr: '/images'
+      personTVshowCredits: {
+        beforeStr: 'https://api.themoviedb.org/3/person/',
+        afterStr: '/tv_credits'
+      },
+      personMovieCredits: {
+        beforeStr: 'https://api.themoviedb.org/3/person/',
+        afterStr: '/movie_credits'
       }
     }
 
@@ -170,13 +180,21 @@ const allLinks = {
         beforeStr: 'https://api.themoviedb.org/3/movie/',
         afterStr: '/similar?language=en-US&page='
       },
+      images: {
+        beforeStr: 'https://api.themoviedb.org/3/movie/',
+        afterStr: '/images'
+      },
       personDetails: {
         beforeStr: 'https://api.themoviedb.org/3/person/',
         afterStr: '?language=en-US'
       },
-      images: {
-        beforeStr: 'https://api.themoviedb.org/3/movie/',
-        afterStr: '/images'
+      personTVshowCredits: {
+        beforeStr: 'https://api.themoviedb.org/3/person/',
+        afterStr: '/tv_credits'
+      },
+      personMovieCredits: {
+        beforeStr: 'https://api.themoviedb.org/3/person/',
+        afterStr: '/movie_credits'
       }
     }
 

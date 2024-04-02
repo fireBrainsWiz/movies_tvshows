@@ -1,9 +1,9 @@
-import SlickSliderT2 from './SlickSliderT2'
+import SlickSlider from './SlickSlider'
 import { Genre } from '@/app/lib/types'
 
 export default function CrimeDramaMystery() {
-  // const genres: Genre[] = ['crime', 'drama', 'mystery']
-  const genres: Genre[] = ['crime']
+  const genres: Genre[] = ['crime', 'drama', 'mystery']
+  // const genres: Genre[] = ['crime']
   
   return (
     <>
@@ -11,7 +11,7 @@ export default function CrimeDramaMystery() {
         {
           genres.map((genre) => {
             return (
-              <SlickSliderT2 
+              <SlickSlider 
                 key={genre}
                 genre={genre} 
               />  
@@ -23,3 +23,5 @@ export default function CrimeDramaMystery() {
     </>
   )
 }
+
+

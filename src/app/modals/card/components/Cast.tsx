@@ -9,6 +9,8 @@ import { getFirstXItems } from '../lib/utils'
 import useImagePixel from '@/app/(__pages__)/hooks/useImagePixel'
 
 import {steal} from '@/app/modals/card/lib/colorThief'
+import ToggleMenuContext from '@/app/(__pages__)/context/ToggleMenuContext'
+import ToggleShowPersonContext from '@/app/(__pages__)/context/ToggleShowPersonContext'
 
 
 
@@ -29,11 +31,12 @@ export default function Cast(
   return (
     <div className='w-full text-sm grid grid-flow-col overflow-x-auto justify-start pl-10'>
       {
-        castItems.map((castItem) => (
+        castItems.map((castItem, i) => (
           <CastItem
-            key={castItem.id}
+            key={i}
             castItem={castItem}
             card={card}
+            i={i}
           />
         ))
       }
@@ -46,15 +49,20 @@ export default function Cast(
 
 
 function CastItem(
-  {castItem, card} : {
+  {castItem, card, i} : {
     castItem: MediaTypeInfoType['credits']['cast'][0],
-    card: ResultType
+    card: ResultType,
+    i: number
   }
   ) {
-
+    // console.log(castItem.id)
     const imageRef = useRef<HTMLImageElement | null>(null)
     
     const {links} = useContext(MoviesOrTVshowsLinksContext)
+
+    const {
+      setIsVisiblePerson, setPersonDetails
+    } = useContext(ToggleShowPersonContext)
 
     const [personDetail, setPersonDetail] = 
     useState({} as MediaTypeInfoType['personDetails']) 
@@ -133,10 +141,23 @@ function CastItem(
       ? 7 : 6
     ))()
 
+    //? for testing
+    useEffect(() => {
+      if (i) return
+      // setIsVisiblePerson(true)
+      // setPersonDetails(personDetail)
+    }, [personDetail, setIsVisiblePerson, setPersonDetails, i])
+
+
+    // console.log(personDetail.id)
 
   return (
     <svg width="154" height="172" viewBox="0 0 154 172" fill="none" xmlns="http://www.w3.org/2000/svg"
       className='cursor-pointer m-6'
+      onClick={() => {
+        setIsVisiblePerson(true)
+        setPersonDetails(personDetail)
+      }}
     >
       <path d="M126.143 132.07H0.214844V138.213H73.3144H110.786H116.928H125.835H126.143C129.521 138.213 132.285 140.977 132.285 144.356C132.285 147.734 129.521 150.499 126.143 150.499H125.835H116.928H110.786V156.642V162.784V163.092C110.786 164.627 109.25 165.856 107.714 165.856H9.42907C7.58623 165.856 6.35766 164.627 6.35766 162.784V156.642V150.499H0.214844V156.642V162.784C0.214844 168.006 4.20768 171.999 9.42907 171.999H107.714C112.936 171.999 116.928 168.006 116.928 162.784V156.642H126.143C132.9 156.642 138.428 151.113 138.428 144.356C138.428 137.599 132.9 132.07 126.143 132.07Z" fill={imageColor}/>
       <path d="M116.928 12.2856V9.21423C116.928 3.99283 112.936 0 107.714 0H9.42907C4.20767 0 0.214844 3.99283 0.214844 9.21423V132.5H6.35766V9.21423C6.35766 7.37138 7.58623 6.14282 9.42907 6.14282H107.714C109.557 6.14282 110.786 7.37138 110.786 9.21423V12.2856C90.5143 13.8213 74.8501 30.0998 73.9287 50.3711V52.214C73.9287 63.271 78.5358 73.7138 86.5214 81.3923C102.493 96.4422 127.985 95.828 143.035 79.8566C150.1 72.4853 153.785 62.6567 153.785 52.5211V50.9854C153.785 50.6782 153.785 50.6782 153.785 50.6782C152.864 30.0998 136.893 13.8213 116.928 12.2856ZM113.857 87.228C94.5071 87.228 78.8429 71.5638 78.8429 52.214C78.8429 32.8641 94.5071 17.1999 113.857 17.1999C133.207 17.1999 148.871 32.8641 148.871 52.214C148.871 71.5638 133.207 87.228 113.857 87.228Z" fill={imageColor}/>
@@ -167,6 +188,7 @@ function CastItem(
         placeholder='blur'
         blurDataURL={PLACEHOLDER_IMAGE.TMDB_IMAGE}
         width={100} height={100}
+        priority
         onError={() => setNoImageUrl('/no-image.png')}
       />
       </div>
@@ -186,10 +208,20 @@ function CastItem(
           <span>{personDetail.birthday}</span>
           <span>
             {
-            `(${
-              new Date().getFullYear() -
-              Number(personDetail.birthday.slice(0,4))
-            }) `
+            `(${ 
+                personDetail?.deathday && 
+                personDetail?.birthday
+                ? (
+                  Number(personDetail.deathday.slice(0,4)) -
+                  Number(personDetail.birthday.slice(0,4))
+                )
+                : personDetail?.birthday
+                  ? (
+                    new Date().getFullYear() -
+                    Number(personDetail.birthday.slice(0,4))
+                  )
+                : 'N/A'
+              })`
             }
           </span>
         </>

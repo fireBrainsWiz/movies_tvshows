@@ -17,22 +17,19 @@ export default function  MyImageGallery({
   const items: ReactImageGalleryItem[] = images.map((image) =>({
     original: ImagePath + image.file_path,
     thumbnail: ImagePath + image.file_path,
+
+    thumbnailHeight: 100,
+    thumbnailWidth: 100,
  
-    // loading: 'lazy',
-    // thumbnailLoading: 'lazy',
-    // originalWidth: type === 'posters' ? 600 : 200,
-    // originalClass: 'width: 10%;',
     renderItem(item) {
       return (
-        <ImageGalleryImage image={image} type={type} />
+        <ImageGalleryImage 
+          image={image} 
+          type={type} 
+        />
       )
     },
 
-    // renderThumbInner(item) {
-    //   return (
-    //     <ImageGalleryImage image={image} type={type} />
-    //   )
-    // }
   }))
 
   return (
@@ -40,6 +37,7 @@ export default function  MyImageGallery({
       <ImageGallery 
         items={items} 
         additionalClass='w-fullp bg-red-500'
+        infinite={false}
       />
     </div>
   );

@@ -16,7 +16,7 @@ export default function BackdropLogoPosterImageSwiper(
   return (
     <>
     {
-    isVisibleCardPage ? (
+      isVisibleAllImages ? (
       <MyImageGallery 
         images={images}
         type={type}
