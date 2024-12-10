@@ -11,7 +11,7 @@ export default function HomePageHeaderSection() {
     <div className=" w-full max-w-[1920px] mx-auto bg-neutral-900p mb-6">
       <div className="bg-stone-500p  relative my-6p">
         <NavLinks />
-        {/* <Banners /> */}
+        <Banners />
       </div>
       {/* <hr className='border-orange-400'/> */}
 

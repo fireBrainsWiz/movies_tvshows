@@ -54,7 +54,6 @@ export default function RootLayout({
                 <CardBeingViewedContextProvider>
                   <ToggleMenuContextProvider>
                     <ToggleSearchContextProvider>
-                      {/* <ThemeContextProvider> */}
 
                         <ToggleShowPersonContextProvider>
                         <>{/* <TopNav /> */}</>
@@ -65,22 +64,21 @@ export default function RootLayout({
                         </main>
 
                           <br /> {/*to be removed*/}
-                          {/* <Menu /> */}
-                          {/* <SavedItems /> */}
+                          <Menu />
+                          <SavedItems />
                           <Search />
-                          {/* <CardPage /> */}
-                          {/* <Seasons /> */}
-                          {/* <SelectSeason /> */}
-                          {/* <CompanyImagesViewer /> */}
-                          {/* <NetworkImagesViewer /> */}
-                          {/* <AllImages /> */}
-                          {/* <AllVideos /> */}
-                          {/* <CastAndCrew /> */}
-                          {/* <Person /> */}
-                          {/* <Toast /> */}
+                          <CardPage />
+                          <Seasons />
+                          <SelectSeason />
+                          <CompanyImagesViewer />
+                          <NetworkImagesViewer />
+                          <AllImages />
+                          <AllVideos />
+                          <CastAndCrew />
+                          <Person />
+                          <Toast />
                         </ToggleShowPersonContextProvider>
 
-                      {/* </ThemeContextProvider> */}
                     </ToggleSearchContextProvider>
                   </ToggleMenuContextProvider>
                 </CardBeingViewedContextProvider>

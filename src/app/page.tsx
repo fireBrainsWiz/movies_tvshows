@@ -24,11 +24,11 @@ export default function Home() {
   return (
     <div className=" bg-[#333232]p bg-whitep overflow-x-hidden relative bg-transparent">
       <HomePageHeaderSection />
-      {/* <BelowTheHeader /> */}
-      {/* <TrendingMoviesOrTVshows links={links} /> */}
-      {/* <PopularMoviesOrTVshows links={links}/>  */}
-      {/* <CrimeDramaMystery /> */}
-      {/* <TrendingPeople /> */}
+      <BelowTheHeader />
+      <TrendingMoviesOrTVshows links={links} />
+      <PopularMoviesOrTVshows links={links}/> 
+      <CrimeDramaMystery />
+      <TrendingPeople />
 
       {/* <p className="text-2xl p-6 bg-red-500 cursor-pointer">go</p> */}
       
