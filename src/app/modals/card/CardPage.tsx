@@ -458,7 +458,7 @@ export default function CardPage() {
                   ref={titleImageContainerRef}
                 >
                   <div className="flex justify-between gap-4 bg-red-500p my-4">
-                    {/* {
+                    {
                       images && (
                         <TitleImage 
                           card={card} 
@@ -466,26 +466,26 @@ export default function CardPage() {
                           setColorThiefColor={setColorThiefColor} 
                         />
                       )
-                    } */}
+                    }
                     
-                    {/* {
+                    {
                       links.MEDIATYPE === 'tvshow' && 'seasons' in details && details.seasons?.[0]?.id && (
                         <ShowSelectSeason  />
                       )
-                    } */}
+                    }
                   </div>
 
-                  {/* <p className="mb-8 italic">{details.tagline}</p> */}
+                  <p className="mb-8 italic">{details.tagline}</p>
 
                   <div className="bg-green-600p">
-                    {/* {
+                    {
                       'keywords' in keywords && keywords.keywords?.[0]  || 'results' in keywords && keywords.results?.[0] ? (
                         <p className="text-2xl mb-3">A {links.MEDIATYPE} about:</p>
                       )
                       : null
-                    } */}
+                    }
                     <ul className="bg-sky-800p w-full pl-4p flex gap-x-10 overflow-hidden overflow-x-auto [@media_(max-width:1020px)]:overflow-x-hidden [@media_(max-width:1020px)]:overflow-visible [@media_(max-width:1020px)]:flex-wrap">
-                      {/* <Keywords keywords={keywords} /> */}
+                      <Keywords keywords={keywords} />
                     </ul>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ export default function CardPage() {
                   </p>
 
                   {/* yellow star and others  */}
-                  {/* <p className="flex flex-nowrap gap-x-2 items-center justify-between  xl:my-[10px] my-[8px] [@media_(max-width:1020px)]:my-6 [@media_(min-width:1030px)]:my-2 pt-2 border-t border-white/70 dark:border-gray-500 px-4 ">
+                  <p className="flex flex-nowrap gap-x-2 items-center justify-between  xl:my-[10px] my-[8px] [@media_(max-width:1020px)]:my-6 [@media_(min-width:1030px)]:my-2 pt-2 border-t border-white/70 dark:border-gray-500 px-4 ">
                     <span className="flex items-center gap-1">
                       <FaStar color="yellow"/>
                       {
@@ -541,19 +541,19 @@ export default function CardPage() {
                         )
                       }
                     </span>
-                  </p> */}
+                  </p>
 
                   <div className="relative h-[34px] xl:my-[10px] [@media_(max-width:1020px)]:my-6 leading-[20px] [@media_(max-width:1020px)]:leading-[24px] [@media_(max-width:1020px)]:h-auto">
                     {/* Genres */}
                     <ul className="flex flex-nowrap mx-4 overflow-hidden overflow-x-auto absolute inset-0 [@media_(max-width:1020px)]:static [@media_(max-width:1020px)]:overflow-visible [@media_(max-width:1020px)]:flex-wrap [@media_(max-width:1020px)]:overflow-x-hidden"
                     >
-                      {/* {
+                      {
                         details.genres && details.genres.map((genre, i) => (
                           <li key={i} className="list-disc capitalize mx-2 first:ml-0 whitespace-nowrap [@media_(max-width:1020px)]:whitespace-normal [@media_(max-width:1020px)]:my-1 first:list-none">
                             {genre.name}
                           </li>
                         ))
-                      } */}
+                      }
                     </ul>
                   </div>
 
@@ -572,7 +572,7 @@ export default function CardPage() {
                   }
 
                   {/* PosterAndOthers */}
-                  {/* {
+                  {
                     'id' in card && (
                       <div className="bg-black max-h-[150px] overflow-hidden absolute [@media_(max-width:1020px)]:static [@media_(max-width:1020px)]:my-6 [@media_(min-width:1020px)]:max-h-[120px] [@media_(min-width:1280px)]:max-h-[150px] w-full max-w-[635px] [@media_(max-width:1020px)]:max-w-full [@media_(max-width:1020px)]:max-h-max"
                         ref={posterAndOthersContainerRef}
@@ -597,12 +597,12 @@ export default function CardPage() {
                         }
                       </div>
                     )
-                  } */}
+                  }
 
                 </div>
                 
                 {/* trailer */}
-                {/* <div className="mt-8p md:my-0p [@media_(max-width:1020px)]:mx-4 bg-red-500p "
+                <div className="mt-8p md:my-0p [@media_(max-width:1020px)]:mx-4 bg-red-500p "
                   style={forBigScreen? {
                     height:  `${
                       (titleImageContainerRef.current?.getBoundingClientRect().height)
@@ -611,7 +611,7 @@ export default function CardPage() {
                   }: {height: 'max-content'}}
                 >
                   <Trailer trailers={trailers} />
-                </div> */}
+                </div>
                 
                 
               </div>
@@ -622,7 +622,7 @@ export default function CardPage() {
         </div>
 
         {/* Starring */}
-        {/* <div className=" my-10 bg-red-200p pr-10p [@media_(max-width:1020px)]:pr-4 [@media_(max-width:1020px)]:mx-4 max-w-[1546px] mx-auto">
+        <div className=" my-10 bg-red-200p pr-10p [@media_(max-width:1020px)]:pr-4 [@media_(max-width:1020px)]:mx-4 max-w-[1546px] mx-auto">
             {
               credits.cast?.[0] &&
                 <p 
@@ -642,104 +642,38 @@ export default function CardPage() {
                   }
                   </ul>
                   </div>
-                  </div> */}
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                  </div>
 
 
         <div className="my-10 max-w-[1546px] mx-auto">
-          {/* <StarDirectorWriterCreatorBar 
+          <StarDirectorWriterCreatorBar 
             credits={credits} details={details}
-          /> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          />
 
         
-          {/* <SpokenLanguages details={details} /> */}
+          <SpokenLanguages details={details} />
           
-          {/* {
+          {
             credits.cast?.[0] &&
             <p className=" mx-4 text-xl text-center">Cast</p>
-          } */}
-          {/* {
+          }
+          {
             credits.cast && (
               <div className="grid justify-center">
                 <Cast cast={credits.cast}/>  
               </div>
             )
-          } */}
+          }
 
-          {/* <Recommendations id={card.id} /> */}
-          {/* <Similar id={card.id} /> */}
+          <Recommendations id={card.id} />
+          <Similar id={card.id} />
               
           
           {/* <Iframes trailers={trailers}/> */}
         </div>
 
         <footer className="bg-slate-950 min-h-[200px] py-10 px-4 max-w-[1546px] mx-auto">
-          {/* {
+          {
             details.production_companies && (
               <Companies 
                 results={details.production_companies} 
@@ -761,7 +695,7 @@ export default function CardPage() {
 
           <WatchProviders cardId={card.id} />
 
-          <LatestMoviesOrTvShows /> */}
+          <LatestMoviesOrTvShows />
 
           <div className="bg-red-500/20 grid">
             <span>share</span>
