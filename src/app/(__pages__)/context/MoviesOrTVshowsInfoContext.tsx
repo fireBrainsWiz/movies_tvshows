@@ -4,8 +4,6 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import {MediaTypeInfoType} from '@/app/lib/MediaTypeInfoTypes'
 
 
-
-
 const MoviesOrTVshowsInfoContext = 
 createContext<MediaTypeInfoType | undefined>(undefined)
 
@@ -13,8 +11,7 @@ createContext<MediaTypeInfoType | undefined>(undefined)
 export function  MoviesOrTVshowsInfoContextProvider(
   {children}: PropsWithChildren<{}>) {
 
-    const [details, setDetails] = 
-      useState({} as MediaTypeInfoType['details'])
+    const [details, setDetails] = useState({} as MediaTypeInfoType['details'])
 
     const [credits, setCredits] = useState({} as MediaTypeInfoType['credits'])
 
@@ -26,8 +23,6 @@ export function  MoviesOrTVshowsInfoContextProvider(
 
     const [similar, setSimilar] = useState({} as MediaTypeInfoType['similar'])
 
-    const [images, setImages] = useState({} as MediaTypeInfoType['images'])
-    
     const [personDetails, setPersonDetails] = useState({} as MediaTypeInfoType['personDetails'])
 
     const [personMovieCredits, setPersonMovieCredits] = useState({} as MediaTypeInfoType['personMovieCredits'])
@@ -43,7 +38,6 @@ export function  MoviesOrTVshowsInfoContextProvider(
       keywords, setKeywords,
       recommendations, setRecommendations,
       similar, setSimilar,
-      images, setImages,
       personDetails, setPersonDetails,
       personMovieCredits, setPersonMovieCredits,
       personTVshowCredits, setPersonTVshowCredits

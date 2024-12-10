@@ -1,0 +1,880 @@
+import { useEffect, useState } from 'react';
+import { VisibleAreaBoundingRect } from '../../ItemsSlides';
+import Parts, { PartsType } from './Parts';
+import { TMDBOptions } from '@/app/client/helpers/TMDB_API';
+import axios from 'axios';
+import { TfiClose } from "react-icons/tfi";
+import CollectionPartsMenu from './MyImageGallery';
+import PartSelectors from './PartSelectors';
+import Part from './Part';
+import PartMain from './PartMain';
+
+
+export function CollectionPartsModal({
+   isOpenCollectionParts, 
+   setIsOpenCollectionParts, 
+   itemsContainerParentRef, 
+   title, 
+   visibleAreaBoundingRect,
+   clickedCollectionId
+}: {
+   isOpenCollectionParts: boolean;
+   setIsOpenCollectionParts: (_: boolean) => void;
+   itemsContainerParentRef: React.RefObject<HTMLDivElement | null>;
+   title: string;
+   visibleAreaBoundingRect: VisibleAreaBoundingRect;
+   clickedCollectionId: number | null
+}) {
+   
+   const [wholeCollection, setWholeCollection] = useState<WholeCollection | null>(null)
+   const [partSelectorSelectedIndex, setPartSelectorSelectedIndex] = useState(1)
+
+
+   function onCloseModalClick() {
+      setIsOpenCollectionParts(false);
+      const elem = itemsContainerParentRef.current;
+      if (!elem || title !== 'Collections') return;
+      elem.style.overflowY = 'auto';
+   }
+
+   //api call
+   useEffect(() => {
+      (async () => {
+         if (!clickedCollectionId) return 
+         
+         try {
+            const res = await axios(
+               `https://api.themoviedb.org/3/collection/${clickedCollectionId}?language=en-US`,
+               TMDBOptions
+            )
+            // console.log(res.data)
+            if (!('data' in res)) throw new Error(
+               'something went wrong. Please reload the page'
+            )
+            
+            setWholeCollection(res.data)
+
+            } catch (err: any) {
+               console.log('err from collecction parts: ', err?.toJSON())
+            }
+      })()
+
+   }, [clickedCollectionId])
+
+   // console.log({pl: wholeCollection?.parts.length, ind:partSelectorSelectedIndex})
+
+
+   return (
+      <div
+         className={`w-full  bg-blue-500p absolute top-0 bottom-0 overflow-hidden overflow-y-autop ${isOpenCollectionParts ? 'left-0' : 'left-full'} transition-all duration-500 p-4p scale-75p`}
+      >
+         <div
+            className={` bg-[#4c4848] absolute top-0 left-0 w-full h-full overflow-hidden overflow-y-auto pt-3 pb-2`}
+            style={{
+               height: `${(visibleAreaBoundingRect.height - 100) - visibleAreaBoundingRect.top}px`
+            }}
+         >
+            {/* <div className=" flex justify-end">
+               <button 
+                  className=" text-2xl p-4 py-5 px-10"
+                  onClick={onCloseModalClick}> 
+                  <TfiClose />
+               </button>
+            </div>
+            <h3 className='text-center text-2xl font-bold'>
+               {wholeCollection?.name  || 'Name not available'}
+            </h3> */}
+
+            {/* <Parts parts={wholeCollection?.parts || []} /> */}
+
+           
+
+            <div className="w-full h-full bg-amber-500/40p border rounded-md grid grid-cols-[1fr,20fr] overflow-hidden">
+                  <div className=" h-fullp bg-red-300/30p grid grid-rows-[1fr,5fr,1.6fr] gap-5 border-r">
+                     <div className=" border-b">
+                        <button 
+                           className=" text-2xl font-bold w-full h-full flex justify-center items-center"
+                           onClick={onCloseModalClick}> 
+                           <TfiClose />
+                        </button>
+                     </div>
+
+                     <PartSelectors 
+                        partSelectorSelectedIndex={partSelectorSelectedIndex}
+                        setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+                        partsLen={wholeCollection?.parts?.length || 0}
+
+                     />
+                     <PartDate 
+                        part={wholeCollection?.parts[partSelectorSelectedIndex-1] || null} 
+                     />
+                  </div>
+
+                  <Part 
+                     // part={wholeCollection?.parts[0] || null}
+                     part={wholeCollection?.parts[partSelectorSelectedIndex-1] || null} 
+                     partsLen={wholeCollection?.parts?.length || 0}
+                     partSelectorSelectedIndex={partSelectorSelectedIndex}
+                     setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+                  />
+            </div>
+
+
+         </div>
+      </div>
+   );
+}
+
+function PartDate({
+   part
+}:{
+   part:  PartsType[0] | null
+}) {
+
+   const release_date = part? [...part.release_date.split('-')] : []
+   
+   return (
+      <p className="bg-blue-500p rotate-90 flex items-center justify-center font-bold">
+         <span>{part && release_date[2]}-</span>
+         <span>{part && release_date[1]}-</span>
+         <span>{part && release_date[0]}</span>
+      </p>
+   )
+}
+
+
+type WholeCollection = {
+   id: string,
+   name : string,
+   overview : string,
+   poster_path : string,
+   backdrop_path: string,
+   parts: PartsType
+}
+
+------------------------------------------------------------
+
+import { useEffect, useRef, useState } from "react"
+
+export default function PartSelectors({
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+  partsLen
+}:{
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+  partsLen: number
+
+}) {
+
+  const [viewAreaInfo, setViewAreaInfo] = useState<viewAreaInfoType | null>(null)
+  const [selectedPartSelectorInfo, setSelectedPartSelectorInfo] = 
+  useState<selectedPartSelectorInfoType | null>(null)
+
+
+  useEffect(()=>{
+    // setPartSelectorSelectedIndex(selectedPartSelectorInfo?.index || 0 )
+
+    const elem = selectedPartSelectorInfo?.elem
+    const prevElem = selectedPartSelectorInfo?.prev
+    const nextElem = selectedPartSelectorInfo?.next
+    const elemDomRect = selectedPartSelectorInfo?.elemDomRect
+    
+    const viewArea = viewAreaInfo?.elem
+    const viewAreaDomRect = viewAreaInfo?.elemDomRect
+
+    if(elem && prevElem && nextElem && elemDomRect && viewArea  && viewAreaDomRect) {
+      if (
+        elemDomRect.top < viewAreaDomRect.top &&
+        elemDomRect.bottom > viewAreaDomRect.top 
+        ||
+        prevElem.getBoundingClientRect().top < viewAreaDomRect.top &&
+        prevElem.getBoundingClientRect().bottom > viewAreaDomRect.top
+      ) {
+          viewArea.scrollBy({
+            top: -100,
+            left: 0,
+            behavior: 'smooth'
+          })
+          // console.log('DOWN')
+        } else if (
+          elemDomRect.top < viewAreaDomRect.bottom &&
+          elemDomRect.bottom > viewAreaDomRect.bottom
+          ||
+          nextElem.getBoundingClientRect().top < viewAreaDomRect.bottom &&
+          nextElem.getBoundingClientRect().bottom > viewAreaDomRect.bottom
+      ) {
+          viewArea.scrollBy({
+            top: 100,
+            left: 0,
+            behavior: 'smooth'
+          })
+          // console.log('UP')
+      } 
+    } else if(
+        elem && !prevElem && nextElem && elemDomRect && viewArea  && viewAreaDomRect &&
+        (elemDomRect.top < viewAreaDomRect.top &&
+        elemDomRect.bottom > viewAreaDomRect.top) 
+      )  {
+        // console.log('DOWM L')
+        viewArea.scrollBy({
+          top: -100,
+          left: 0,
+          behavior: 'smooth'
+        })
+
+      } else if (
+        elem && prevElem && !nextElem && elemDomRect && viewArea  && viewAreaDomRect &&
+        (elemDomRect.top < viewAreaDomRect.bottom &&
+        elemDomRect.bottom > viewAreaDomRect.bottom)
+      )  {
+        // console.log('UP L')
+        viewArea.scrollBy({
+          top: 100,
+          left: 0,
+          behavior: 'smooth'
+        })
+    }
+
+  },[viewAreaInfo, selectedPartSelectorInfo])
+
+
+  
+  return (
+    <div className="bg-green-500/20p grid justify-center items-center">
+      <div className="h-[300px] min-w-[50px] ">
+        <ViewArea 
+          viewAreaInfo={viewAreaInfo} 
+          setViewAreaInfo={setViewAreaInfo}
+          selectedPartSelectorInfo={selectedPartSelectorInfo}
+          setSelectedPartSelectorInfo={setSelectedPartSelectorInfo}
+          partSelectorSelectedIndex={partSelectorSelectedIndex}
+          setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+          partsLen={partsLen}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+
+function ViewArea({
+  viewAreaInfo,
+  setViewAreaInfo,
+  selectedPartSelectorInfo,
+  setSelectedPartSelectorInfo,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+  partsLen
+
+}: {
+  viewAreaInfo: viewAreaInfoType | null
+  setViewAreaInfo: (_: viewAreaInfoType | null) => void
+
+  selectedPartSelectorInfo: selectedPartSelectorInfoType | null 
+  setSelectedPartSelectorInfo: (_: selectedPartSelectorInfoType | null) => void
+
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+
+  partsLen: number
+
+}) {
+
+  const viewAreaRef = useRef<HTMLDivElement | null>(null)
+
+
+  useEffect(()=>{
+    const viewArea = viewAreaRef.current
+    if(viewArea) {
+      setViewAreaInfo({
+        elem: viewArea,
+        elemDomRect: viewArea.getBoundingClientRect()
+      })
+    }
+
+  },[viewAreaRef])
+
+  //  console.log(partsLen)
+
+  
+  return (
+    <div 
+      ref={viewAreaRef}
+      className="parts-selectors-view-area h-full w-full overflow-hidden overflow-y-auto last-child:bg-red-500">
+      {
+        [...new Array(partsLen)].map((_, i)=>{
+          return (
+            <PartSelector 
+              key={i}
+              num={++i} 
+              viewAreaInfo={viewAreaInfo} 
+              setViewAreaInfo={setViewAreaInfo}
+              selectedPartSelectorInfo={selectedPartSelectorInfo}
+              setSelectedPartSelectorInfo={setSelectedPartSelectorInfo}
+              partSelectorSelectedIndex={partSelectorSelectedIndex}
+              setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+            />
+          )
+        })
+      }
+    </div>
+  )
+}
+
+
+function PartSelector({
+  num,
+  viewAreaInfo,
+  setViewAreaInfo,
+  selectedPartSelectorInfo,
+  setSelectedPartSelectorInfo,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex
+}: {
+  num:number
+  viewAreaInfo: viewAreaInfoType | null 
+  setViewAreaInfo: (_: viewAreaInfoType | null) => void
+
+  selectedPartSelectorInfo: selectedPartSelectorInfoType | null 
+  setSelectedPartSelectorInfo: (_: selectedPartSelectorInfoType | null) => void
+
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+
+}) {
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  function onPartSelectorClick() {
+    // console.log(1111)
+    setPartSelectorSelectedIndex(num)
+
+    const button = buttonRef.current
+    if(button) {
+      setSelectedPartSelectorInfo({
+        index: num,
+        elem: button,
+        prev: button.previousElementSibling as HTMLButtonElement | null,
+        next: button.nextElementSibling as HTMLButtonElement | null,
+        elemDomRect: button.getBoundingClientRect()
+      })
+    }
+  }
+
+
+  useEffect(()=>{
+    const button = document.getElementById(`part-selector-id-${partSelectorSelectedIndex}`) as HTMLButtonElement | null 
+
+    if(button) {
+      button.click()
+    }
+  },[partSelectorSelectedIndex])
+
+  // console.log(selectedPartSelectorInfo, viewAreaInfo)
+
+  const isSelectedStyle = num === selectedPartSelectorInfo?.index
+    ? `border-l text-2xl font-bold`: `border-none`
+  ;
+
+  return (
+    <button 
+      ref={buttonRef}
+      id={`part-selector-id-${num}`}
+      className={`bg-amber-500/80p flex justify-center items-center w-14 h-14 ${isSelectedStyle} before:w-full before:h-1/2 before:bg-red-500p mx-auto before:absolute before:top-0 before:-left-[0.7rem] before:border-r-2 before:border-x-stone-600 before:-rotate-[70deg] first:before:border-none last:before:border-r-none relative`}
+      onClick={onPartSelectorClick}
+    >
+      {num && num<10? '0'+num : num}
+    </button>
+  )
+}
+
+
+type viewAreaInfoType = {
+  elem: HTMLDivElement | null
+  elemDomRect: DOMRect | null
+}
+
+type selectedPartSelectorInfoType = {
+  index: number
+  elem: HTMLButtonElement | null
+  prev: HTMLButtonElement | null
+  next: HTMLButtonElement | null
+  elemDomRect: DOMRect | null
+}
+
+------------------------------------------------------------
+import { ImagePath } from "@/app/lib/types"
+import { PartsType } from "./Parts"
+import Image from "next/image"
+import { HiMiniArrowLongRight } from "react-icons/hi2";
+import { TfiClose } from "react-icons/tfi";
+import PartSelectors from "./PartSelectors";
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
+import { useEffect, useState } from "react";
+import PartMain from "./PartMain";
+
+
+export default function Part({
+  part,
+  partsLen,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+}: {
+  part: PartsType[0] | null
+  partsLen: number
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+}) {
+
+
+  return (
+    <PartMain
+      part={part}
+      partSelectorSelectedIndex={partSelectorSelectedIndex}
+      setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+      partsLen={partsLen}
+    />
+  )
+}
+
+export const getColors = (id: number) => {
+  const colors = [
+    'amber', 'yellow', 'green', 
+    'emerald', 'teal', 'cyan', 'sky', 
+    'slate', 'pink', 'rose'
+  ]
+
+  const t = id.toString().split('')
+
+  return `bg-${colors[Number(t[0])]}-${Number(t[t.length-1])?  Number(t[t.length-1])+'00' :'50'}/30`
+}
+
+//blue orange red
+
+
+
+
+/*
+     return (
+    <div className="w-full h-full bg-amber-500/40p border rounded-md grid grid-cols-[1fr,20fr] overflow-hidden">
+      <div className=" h-fullp bg-red-300/30p grid grid-rows-[1fr,5fr,1.6fr] gap-5 border-r">
+        <div className=" border-b">
+          <button 
+            className=" text-2xl font-bold w-full h-full flex justify-center items-center"
+            onClick={onCloseModalClick}> 
+            <TfiClose />
+          </button>
+        </div>
+
+        <PartSelectors 
+          partSelectorSelectedIndex={partSelectorSelectedIndex}
+          setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+        />
+
+        <p className="bg-blue-500p rotate-90 flex items-center justify-center font-bold">
+          <span>{part && release_date[2]}-</span>
+          <span>{part && release_date[1]}-</span>
+          <span>{part && release_date[0]}</span>
+        </p>
+      </div>
+
+      <PartMain 
+        part={part} 
+        partSelectorSelectedIndex={partSelectorSelectedIndex} setPartSelectorSelectedIndex={setPartSelectorSelectedIndex} 
+        partsLen={partsLen} 
+      />
+    </div>
+  )  
+
+*/
+
+
+
+
+
+------------------------------------------------------------
+import { useEffect, useRef, useState } from "react"
+
+export default function PartSelectors({
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+  partsLen
+}:{
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+  partsLen: number
+
+}) {
+
+  const [viewAreaInfo, setViewAreaInfo] = useState<viewAreaInfoType | null>(null)
+  const [selectedPartSelectorInfo, setSelectedPartSelectorInfo] = 
+  useState<selectedPartSelectorInfoType | null>(null)
+
+
+  useEffect(()=>{
+    // setPartSelectorSelectedIndex(selectedPartSelectorInfo?.index || 0 )
+
+    const elem = selectedPartSelectorInfo?.elem
+    const prevElem = selectedPartSelectorInfo?.prev
+    const nextElem = selectedPartSelectorInfo?.next
+    const elemDomRect = selectedPartSelectorInfo?.elemDomRect
+    
+    const viewArea = viewAreaInfo?.elem
+    const viewAreaDomRect = viewAreaInfo?.elemDomRect
+
+    if(elem && prevElem && nextElem && elemDomRect && viewArea  && viewAreaDomRect) {
+      if (
+        elemDomRect.top < viewAreaDomRect.top &&
+        elemDomRect.bottom > viewAreaDomRect.top 
+        ||
+        prevElem.getBoundingClientRect().top < viewAreaDomRect.top &&
+        prevElem.getBoundingClientRect().bottom > viewAreaDomRect.top
+      ) {
+          viewArea.scrollBy({
+            top: -100,
+            left: 0,
+            behavior: 'smooth'
+          })
+          // console.log('DOWN')
+        } else if (
+          elemDomRect.top < viewAreaDomRect.bottom &&
+          elemDomRect.bottom > viewAreaDomRect.bottom
+          ||
+          nextElem.getBoundingClientRect().top < viewAreaDomRect.bottom &&
+          nextElem.getBoundingClientRect().bottom > viewAreaDomRect.bottom
+      ) {
+          viewArea.scrollBy({
+            top: 100,
+            left: 0,
+            behavior: 'smooth'
+          })
+          // console.log('UP')
+      } 
+    } else if(
+        elem && !prevElem && nextElem && elemDomRect && viewArea  && viewAreaDomRect &&
+        (elemDomRect.top < viewAreaDomRect.top &&
+        elemDomRect.bottom > viewAreaDomRect.top) 
+      )  {
+        // console.log('DOWM L')
+        viewArea.scrollBy({
+          top: -100,
+          left: 0,
+          behavior: 'smooth'
+        })
+
+      } else if (
+        elem && prevElem && !nextElem && elemDomRect && viewArea  && viewAreaDomRect &&
+        (elemDomRect.top < viewAreaDomRect.bottom &&
+        elemDomRect.bottom > viewAreaDomRect.bottom)
+      )  {
+        // console.log('UP L')
+        viewArea.scrollBy({
+          top: 100,
+          left: 0,
+          behavior: 'smooth'
+        })
+    }
+
+  },[viewAreaInfo, selectedPartSelectorInfo])
+
+
+  
+  return (
+    <div className="bg-green-500/20p grid justify-center items-center">
+      <div className="h-[300px] min-w-[50px] ">
+        <ViewArea 
+          viewAreaInfo={viewAreaInfo} 
+          setViewAreaInfo={setViewAreaInfo}
+          selectedPartSelectorInfo={selectedPartSelectorInfo}
+          setSelectedPartSelectorInfo={setSelectedPartSelectorInfo}
+          partSelectorSelectedIndex={partSelectorSelectedIndex}
+          setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+          partsLen={partsLen}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+
+function ViewArea({
+  viewAreaInfo,
+  setViewAreaInfo,
+  selectedPartSelectorInfo,
+  setSelectedPartSelectorInfo,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+  partsLen
+
+}: {
+  viewAreaInfo: viewAreaInfoType | null
+  setViewAreaInfo: (_: viewAreaInfoType | null) => void
+
+  selectedPartSelectorInfo: selectedPartSelectorInfoType | null 
+  setSelectedPartSelectorInfo: (_: selectedPartSelectorInfoType | null) => void
+
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+
+  partsLen: number
+
+}) {
+
+  const viewAreaRef = useRef<HTMLDivElement | null>(null)
+
+
+  useEffect(()=>{
+    const viewArea = viewAreaRef.current
+    if(viewArea) {
+      setViewAreaInfo({
+        elem: viewArea,
+        elemDomRect: viewArea.getBoundingClientRect()
+      })
+    }
+
+  },[viewAreaRef])
+
+  //  console.log(partsLen)
+
+  
+  return (
+    <div 
+      ref={viewAreaRef}
+      className="parts-selectors-view-area h-full w-full overflow-hidden overflow-y-auto last-child:bg-red-500">
+      {
+        [...new Array(partsLen)].map((_, i)=>{
+          return (
+            <PartSelector 
+              key={i}
+              num={++i} 
+              viewAreaInfo={viewAreaInfo} 
+              setViewAreaInfo={setViewAreaInfo}
+              selectedPartSelectorInfo={selectedPartSelectorInfo}
+              setSelectedPartSelectorInfo={setSelectedPartSelectorInfo}
+              partSelectorSelectedIndex={partSelectorSelectedIndex}
+              setPartSelectorSelectedIndex={setPartSelectorSelectedIndex}
+            />
+          )
+        })
+      }
+    </div>
+  )
+}
+
+
+function PartSelector({
+  num,
+  viewAreaInfo,
+  setViewAreaInfo,
+  selectedPartSelectorInfo,
+  setSelectedPartSelectorInfo,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex
+}: {
+  num:number
+  viewAreaInfo: viewAreaInfoType | null 
+  setViewAreaInfo: (_: viewAreaInfoType | null) => void
+
+  selectedPartSelectorInfo: selectedPartSelectorInfoType | null 
+  setSelectedPartSelectorInfo: (_: selectedPartSelectorInfoType | null) => void
+
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+
+}) {
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  function onPartSelectorClick() {
+    // console.log(1111)
+    setPartSelectorSelectedIndex(num)
+
+    const button = buttonRef.current
+    if(button) {
+      setSelectedPartSelectorInfo({
+        index: num,
+        elem: button,
+        prev: button.previousElementSibling as HTMLButtonElement | null,
+        next: button.nextElementSibling as HTMLButtonElement | null,
+        elemDomRect: button.getBoundingClientRect()
+      })
+    }
+  }
+
+
+  useEffect(()=>{
+    const button = document.getElementById(`part-selector-id-${partSelectorSelectedIndex}`) as HTMLButtonElement | null 
+
+    if(button) {
+      button.click()
+    }
+  },[partSelectorSelectedIndex])
+
+  // console.log(selectedPartSelectorInfo, viewAreaInfo)
+
+  const isSelectedStyle = num === selectedPartSelectorInfo?.index
+    ? `border-l text-2xl font-bold`: `border-none`
+  ;
+
+  return (
+    <button 
+      ref={buttonRef}
+      id={`part-selector-id-${num}`}
+      className={`bg-amber-500/80p flex justify-center items-center w-14 h-14 ${isSelectedStyle} before:w-full before:h-1/2 before:bg-red-500p mx-auto before:absolute before:top-0 before:-left-[0.7rem] before:border-r-2 before:border-x-stone-600 before:-rotate-[70deg] first:before:border-none last:before:border-r-none relative`}
+      onClick={onPartSelectorClick}
+    >
+      {num && num<10? '0'+num : num}
+    </button>
+  )
+}
+
+
+type viewAreaInfoType = {
+  elem: HTMLDivElement | null
+  elemDomRect: DOMRect | null
+}
+
+type selectedPartSelectorInfoType = {
+  index: number
+  elem: HTMLButtonElement | null
+  prev: HTMLButtonElement | null
+  next: HTMLButtonElement | null
+  elemDomRect: DOMRect | null
+}
+
+
+
+------------------------------------------------------------
+
+import { PartsType } from "./Parts"
+import { ImagePath } from "@/app/lib/types"
+import Image from "next/image"
+import { HiMiniArrowLongRight } from "react-icons/hi2";
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
+import { getColors } from "./Part";
+import { useEffect, useRef, useState } from "react";
+import useImagePixel from "@/app/(__pages__)/hooks/useImagePixel";
+import lightOrDark from "@/app/client/helpers/lightOrDark";
+
+
+export default function PartMain({
+  part,
+  partSelectorSelectedIndex,
+  setPartSelectorSelectedIndex,
+  partsLen,
+}:{
+  part: PartsType[0] | null
+  partSelectorSelectedIndex: number
+  setPartSelectorSelectedIndex: (_: number) => void
+  partsLen: number
+}) {
+
+  const imageRef = useRef<HTMLImageElement | null>(null)
+  const [imageColor, setImageColor] = useState('')
+  const [isLoadingImage, setIsLoadingImage] = useState(true)
+
+
+  useImagePixel({
+    backdrop_path: part?.backdrop_path || '/no-image.png', 
+    imageRef, setColor: setImageColor
+  })
+
+  let brightness = lightOrDark(getColor(imageColor || 'rgb(22 6 6 / 1)'));
+  // console.log(imageColor, {gC:getColor(imageColor)})
+
+
+  const styleOnLight = brightness === 'light'
+    ? ' bg-stone-600/60 text-black' : ''
+  ;
+
+  
+return (
+    <div className={`h-fullp flex flex-wrap bg-red-500p`}
+      style={{
+        background: imageColor
+      }}
+    >
+      <div className={`w-1/2 h-[90%]p  pl-5 ${styleOnLight}`}>
+        <p className=" px-4 pt-2 pb-10 capitalize">{part && part.media_type}</p>
+        <h3 className=" px-4 pb-12 text-[clamp(20px,5vmin,60px)] leading-[1] font-bold">{part && part.title}</h3>
+        <p className=" px-4 mb-[clamp(0px,3vmax,50px)] max-h-[100px] overflow-hidden overflow-y-auto">{part && part.overview}</p>
+        <p className=" px-4 bg-red-500p mt-5p">
+          <button className="w-[clamp(200px,15vmax,600px)] border border-white bg-green-600p px-3 rounded-full flex items-center justify-around">
+          <span className="text-xl">More Info</span>
+          <span><HiMiniArrowLongRight size={50}/></span>
+          </button>
+        </p>
+      </div>
+      <div className="w-1/2 h-[90%] bg-blue-500/50p flex justify-end p-2 ">
+
+      { isLoadingImage && 
+          <p 
+            // ref={loadingContainerRef} 
+            className=" w-full h-full text-white  absolute top-0 flex items-center justify-center bg-blue-700/20 z-[1] pt-4 animate-pulse">
+            Loading...
+          </p>
+        }
+        
+        {
+          part && (
+            <Image 
+              ref={imageRef}
+              src={part.poster_path? ImagePath + part.poster_path : '/no-image.png'} 
+              alt={part.title} 
+              width={400} 
+              height={600} 
+
+              onLoad={() => {
+                setTimeout(() => {
+                  setIsLoadingImage(false)
+                }, 1000)
+              }}
+              onError={() => {
+                setTimeout(() => {
+                  setIsLoadingImage(false)
+                }, 1000)
+              }}
+
+              style={{opacity: isLoadingImage ? 0 : 1}}
+              className={`max-w-full h-autop max-h-[550px] [transition:opacity_300ms_ease-in-out] object-coverp rounded-md`}
+            />
+          )
+        }
+      </div>
+      <div className="w-full h-[10%] bg-stone-600/50 flex items-center justify-between pl-4">
+        <p className="underline capitalize">{part && part.original_language}</p>
+        <p className=" flex gap-10 text-2xl">
+          <button className="p-4 bg-amber-600/60p"
+            onClick={()=> setPartSelectorSelectedIndex(
+              partSelectorSelectedIndex>1
+              ? partSelectorSelectedIndex-1 : partSelectorSelectedIndex
+            )}
+          >
+            <MdArrowBackIosNew />
+          </button>
+          <button className="p-4 bg-cyan-600/60p"
+            onClick={()=> setPartSelectorSelectedIndex(
+              partSelectorSelectedIndex < partsLen
+              ? partSelectorSelectedIndex+1 : partSelectorSelectedIndex
+            )}
+          >
+            <MdArrowForwardIos />
+          </button>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+
+const getColor = (color = 'rgb(22 6 6 / 1)') => {
+  let regexpMatchArr = 
+  color.match(/^rgb?\((\d+)\s*(\d+)\s*(\d+)\s\/\s*(\d+)\)$/) as RegExpMatchArray
+  return `rgb(${regexpMatchArr[1]},${regexpMatchArr[2]},${regexpMatchArr[3]})`
+}
+
+------------------------------------------------------------
+

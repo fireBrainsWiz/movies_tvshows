@@ -683,7 +683,7 @@ export type ResultType = {
   backdrop_path: string
   genre_ids: number[]
   id: number
-  origin_country: string[]
+  origin_country?: string[]
   original_language: string
   original_name: string
   overview: string
@@ -728,6 +728,57 @@ export type Genre =
   | "war & politics"
   | "western"
 ;
+
+type MovieGenre = {
+  genres: {
+    id: number
+    name: string
+  }
+}
+
+export type posisibleMovieGenreName = [
+  "Action",
+  'Adventure',
+  'Animation',
+  'Comedy',
+  'Crime',
+  'Documentary',
+  'Drama',
+  'Family',
+  'Fantasy',
+  'History',
+  'Horror',
+  'Music',
+  'Mystery',
+  'Romance',
+  'Science Fiction',
+  'TV Movie',
+  'Thriller',
+  'War',
+  'Western'
+]
+
+
+export type PossibleTVshowGenreName = [
+  "Action & Adventure",
+  'Animation',
+  'Comedy',
+  'Crime',
+  'Documentary',
+  'Drama',
+  'Family',
+  'Kids',
+  'Mystery',
+  'News',
+  'Reality',
+  'Sci-Fi & Fantasy',
+  'Soap',
+  'Talk',
+  'War & Politics',
+  'Western'
+]
+
+
 
 /* 
 page: 1

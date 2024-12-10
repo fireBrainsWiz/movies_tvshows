@@ -12,7 +12,7 @@ import {
 
 
 
-type CommonTypes = {
+export type CommonTypes = {
   Person: {
     details: {
       "adult": boolean,
@@ -45,21 +45,13 @@ type CommonTypes = {
   }
 
   Images: {
-    backdrops: {
-      apect_ratio: number,
-      height: number,
-      iso_639_1: string,
-      file_path: string,
-      vote_average: number,
-      vote_count: number,
-      width: number
-    }[],
+    backdrops:  CommonTypes['Person']['images']['profiles'],
     posters: CommonTypes['Images']['backdrops'],
     logos: CommonTypes['Images']['backdrops'],
     id: number
   }
 
-  reviews: {
+  review: {
     "id": number,
     "page": number,
     "results": {
@@ -76,6 +68,35 @@ type CommonTypes = {
       "updated_at": string,
       "url": string
     }[],
+    "total_pages": number,
+    "total_results": number
+  }
+
+  watchProviders: {
+    id: number
+    results: {
+      [key: string]: {
+        link: string
+        flatrate?: {
+          logo_path: string
+          provider_id: number
+          provider_name: string
+          display_priority: number
+        }[]
+        buy?: {
+          logo_path: string
+          provider_id: number
+          provider_name: string
+          display_priority: number
+        }[]
+        rent?: {
+          logo_path: string
+          provider_id: number
+          provider_name: string
+          display_priority: number
+        }[]
+      }
+    }
   }
 }
 
@@ -100,8 +121,8 @@ export type MediaTypeInfoType = {
   similar: SimilarMovies | SimilarTVshows
   setSimilar: (similar: SimilarMovies | SimilarTVshows) => void
   
-  images: CommonTypes['Images']
-  setImages: (images: CommonTypes['Images']) => void
+  // images: CommonTypes['Images']
+  // setImages: (images: CommonTypes['Images']) => void
   
 
   // ??......

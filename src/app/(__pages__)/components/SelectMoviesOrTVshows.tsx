@@ -15,7 +15,8 @@ export default function SelectMoviesOrTVshows() {
 
   const {isVisibleSearch, setIsVisibleSearch,} = useContext(ToggleSearchContext)
 
-  const [moviesOrTVshowsDefaultsTo, setMoviesOrTVshowsDefaultsTo] = useState('tvshows')
+  const [moviesOrTVshowsDefaultsTo, setMoviesOrTVshowsDefaultsTo] = 
+  useState<'movie' | 'tvshow'>('tvshow')
   
 
   // useEffect(() => {
@@ -58,18 +59,19 @@ export default function SelectMoviesOrTVshows() {
   return (
     <form 
       onSubmit={(e) => e.preventDefault()} 
-      className="grid grid-flow-col items-center bg-green-500p  relative isolate">
+      className="grid grid-flow-col items-center bg-green-500p  relative isolate w-max">
       <label htmlFor="video-types"></label>
-      <select 
+      <select
+        className="tv-or-movies-select" 
         name="video-types" id="video-types" ref={select}
         value={moviesOrTVshows}
         onChange={(e) => {
-          setMoviesOrTVshows(e.target.value)
-          setMoviesOrTVshowsDefaultsTo(e.target.value)
+          setMoviesOrTVshows(e.target.value as 'movie' | 'tvshow')
+          setMoviesOrTVshowsDefaultsTo(e.target.value as 'movie' | 'tvshow')
         }}
         >
-        <option value="tvshows">TV Shows</option>
-        <option value="movies">Movies</option>
+        <option value="tvshow">TV Shows</option>
+        <option value="movie">Movies</option>
       </select> 
       <span 
         className="caret bg-rose-500/40p absolute right-0 -z-10" 

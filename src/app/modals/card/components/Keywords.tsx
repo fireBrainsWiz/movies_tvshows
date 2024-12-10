@@ -12,7 +12,7 @@ export default memo( function Keywords({
         'keywords' in keywords 
         ? (
             keywords.keywords.map((keyword, i) => (
-              <li key={keyword.id} className="list-disc">
+              <li key={keyword.id} className="whitespace-nowrap">
                 {keyword.name}
               </li>
             ))
@@ -21,7 +21,7 @@ export default memo( function Keywords({
           : 'results' in keywords 
           ? (
             keywords.results.map((result, i) => (
-              <li key={i} className="list-disc">
+              <li key={i} className="whitespace-nowrap">
                 {result.name}
               </li>
             ))

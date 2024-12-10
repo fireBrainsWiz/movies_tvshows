@@ -1,4 +1,4 @@
-import SlickSlider from "@/app/(__pages__)/popular/crime-drama-mystery/SlickSlider"
+import SlickSlider from "@/app/(__pages__)/(top_links)/popular/crime-drama-mystery/SlickSlider"
 
 
 export default function Recommendations(

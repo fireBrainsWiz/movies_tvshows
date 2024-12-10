@@ -1,18 +1,19 @@
 'use client'
 
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState, memo } from "react"
 import ToggleSearchContext from "../../(__pages__)/context/ToggleSearchContext"
 import { TfiClose } from "react-icons/tfi";
 import { CiSearch } from "react-icons/ci";
-import ItemsSlides from "./ItemsSlides";
 import { RiMenu3Line } from "react-icons/ri";
 import MoviesOrTVshowsLinksContext from "@/app/(__pages__)/context/MoviesOrTVshowsLinksContext";
 import { TMDBOptions } from "@/app/client/helpers/TMDB_API";
 import axios from "axios";
+import ItemContainer from "./components/ItemContainer";
 
 
 let timer: ReturnType<typeof setTimeout>, 
-  inputChangeTimer: ReturnType<typeof setTimeout>;
+  inputChangeTimer: ReturnType<typeof setTimeout>
+;
 
 
 export default function Search() {
@@ -22,7 +23,7 @@ export default function Search() {
   const [searchTerm, setSearchTerm] = useState('blood')
 
 
-  function handleClick() {
+  function handleCloseSearchClick() {
     setIsVisibleSearch(false)
   }
 
@@ -57,20 +58,22 @@ export default function Search() {
     }
   })
 
+  if (!isVisibleSearch) return null
+  
   return (
     <div 
       key={searchTerm}
       // key={searchTerm}
-      className={`bg-stone-900/95 absolute w-full top-0 bottom-0 z-10 ${isVisibleSearch ? 'left-0' : 'left-[-100%]'} [transition:left_300ms_ease-in-out] overflow-hidden overflow-y-auto min-h-screen `}
+      className={`bg-stone-900/95 absolute w-full top-0 bottom-0 z-10 ${isVisibleSearch ? 'left-0' : 'left-[-100%]'} [transition:left_300ms_ease-in-out] overflow-hidden  min-h-screen `}
     >
 
-      <div className="md:w-[90%] mx-auto  bg-[#a69f9f5b] rounded-lg  relative xs:mt-14 sm:mt-1 xs:py-4 [@media(min-width:412px)]:py-0 ">
+      <div className="md:w-[90%] mx-auto  bg-[#a69f9f5b] rounded-lg  relative sm:mt-1  [@media(min-width:412px)]:py-0 ">
 
         {/* close button */}
         <div className=" flex justify-end">
           <button 
             className=" text-2xl  p-4 "
-            onClick={handleClick}> 
+            onClick={handleCloseSearchClick}> 
             <TfiClose />
           </button>
         </div>
@@ -174,7 +177,7 @@ function SearchBar({
         </div>
       </form>
 
-      <div className="w-[95%] mx-auto my-6">
+      <div className="w-[95%] mx-auto my-6 max-[380px]:my-0">
         <SearchKeyWords 
           phrase={searchPhrase} 
           setSearchText={setSearchText}
@@ -256,6 +259,8 @@ function ResultOptions({
   searchTerm: string
 }) {
 
+
+
   const {moviesOrTVshows, setMoviesOrTVshows} = 
   useContext(MoviesOrTVshowsLinksContext)
 
@@ -265,20 +270,22 @@ function ResultOptions({
 
   useEffect(() => {
     // setIsVisibleResults(false)
-    if (innerWidth < 380) setIsVisibleResults(false)
+    // if (innerWidth < 380) setIsVisibleResults(false)
     const fn = () => {
       if (innerWidth < 380) return setIsVisibleResults(false)
       setIsVisibleResults(true)
     }
+    fn()
+
     addEventListener('resize', fn)
     return () => {
       removeEventListener('resize', fn)
     }
   }, [])
 
-  useEffect (() => {
-    setMoviesOrTVshows('tvshows')
-  }, [setMoviesOrTVshows])
+  // useEffect (() => {
+  //   setMoviesOrTVshows('tvshows')
+  // }, [setMoviesOrTVshows])
 
 
   // useEffect (() => {
@@ -289,23 +296,22 @@ function ResultOptions({
   return (
     <div 
       key={searchTerm}
-      className="relative"
+      className="relative h-auto"
     >
       {/* close button */}
 
       {
-        !isVisibleResults && (
-        <div className="my-10 hidden max-[380px]:block ">
+        !isVisibleResults && !isVisibleModal && (
+        <div className="hidden max-[380px]:block fixed top-0 left-0">
           <button 
             className=" text-2xl  p-4 "
             onClick={() => {
               setIsVisibleModal(true)
             }}
             > 
-            <RiMenu3Line  />
+            <RiMenu3Line />
           </button>
         </div>
-
         )
       }
 
@@ -330,20 +336,19 @@ function ResultOptions({
       {
         isVisibleModal && (
           <> 
-         
             <button 
-              className="block bg-neutral-500/50 absolute top-0 bottom-0 w-full z-10 cursor-default"
+              className="block bg-neutral-500/50 absolute top-0 bottom-0 w-full z-10 cursor-default min-[380px]:hidden"
               onClick={() => {
                 setIsVisibleModal(false)
               }}
             >
               <span 
-                className="absolute top-0 text-2xl p-4"
+                className="absolute top-0 right-0 text-2xl p-4"
                 > 
                 <TfiClose  />
               </span>
               
-              <ul className={` bg-[#343232] my-2 grid divide-y grid-cols-1 w-[50%] h-[70vh] absolute top-0 left-0 z-10 `}>
+              <ul className={` bg-[#343232] my-2 divide-y w-[50%] h-[70vh] absolute top-0 left-0 z-10 max-[380px]:h-full overflow-y-auto`}>
                 {
                   optionTitles.map((title, i) => (
                     <ResultOption 
@@ -361,7 +366,9 @@ function ResultOptions({
         )
       }
 
-      <div className="h-[calc(100vh-200px)] m-4 grid grid-cols-[repeat(5,100%)] overflow-hidden overflow-y-auto"
+      <div 
+      // ref={itemsContainerParentRef}
+      className="h-[calc(100vh-220px)] [@media(min-width:380px)]:h-[calc(100vh-280px)] [@media(min-width:480px)]:h-[calc(100vh-300px)] overflow-y-auto relative"
       >
         {
           optionTitles.map((title, i) => (
@@ -407,13 +414,13 @@ function ResultOption({
 
   
   return (
-    <li className=" bg-[#343232] flex items-center justify-center  max-[380px]:justify-start  max-[380px]:items-start"
+    <li className=" bg-[#343232] p-2 py-4 flex items-center justify-center  max-[380px]:justify-start  max-[380px]:items-start"
       onClick={() => {
         setActiveTitle(title)
         if (title === optionTitles[0]) {
-          setMoviesOrTVshows('tvshows')
+          setMoviesOrTVshows('tvshow')
         } else if (title === optionTitles[1]) {
-          setMoviesOrTVshows('movies')
+          setMoviesOrTVshows('movie')
         }
       }}
       style={isActive ? {
@@ -424,9 +431,9 @@ function ResultOption({
         fontStyle: 'italic'
       } : {}}
     >
-      <button className="w-full h-full max-[500px]:text-sm">
+      <span className="w-full h-full flex items-center justify-center text-center max-[500px]:text-sm ">
         {title}
-      </button>
+      </span>
     </li>
   )
 }
@@ -436,57 +443,13 @@ const optionTitles = [
 ]
 
 
-
-function ItemContainer({
-  isActive, title, i, searchTerm
-}: {
-  isActive: boolean,
-  title: string,
-  i: number,
-  searchTerm: string
-}) {
-
-  const ref = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    const elem = ref.current
-    if (!elem) return
-
-    if (isActive) {
-      // elem.scrollIntoView()
-      // elem.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
-      elem.scrollIntoView({behavior: 'smooth'})
-    }
-  }, [isActive])
-
-  return (
-    <div 
-      ref={ref}
-      className="w-full h-fullp" 
-      style={isActive
-        ? {} 
-        : {}
-      }>
-        <ItemsSlides 
-          links={links[i]} 
-          title={title} 
-          searchTerm={searchTerm}
-        />
-    </div>
-  )
-}
-
-
-
-const links: LinksType = 
+export const links: LinksType = 
 ['tv', 'movie', 'person', 'collection', 'company']
 .map((title, i, arr) => ({
     beforeStr: `${'https://api.themoviedb.org/3/search/'}${title}?query=`, 
     afterStr: i === arr.length - 1 ? '&page=' : '&include_adult=false&language=en-US&page='
   })
 )
-
-
 
 
 export type LinksType = { 

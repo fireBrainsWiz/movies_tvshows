@@ -3,11 +3,16 @@ import { ResultType, } from "@/app/lib/types";
 
 
 
-export default function useImagePixel(
-  { card, imageRef, setColor }: { 
-    card: ResultType, 
+export default function useImagePixel({ 
+    backdrop_path, 
+    imageRef, 
+    setColor, 
+    where=0 
+  }: { 
+    backdrop_path: string, 
     imageRef: {current: HTMLImageElement | null},
     setColor: (bg: string) => void 
+    where?: number
   }) {
     let rgbColor = useRef('')
   
@@ -25,7 +30,7 @@ export default function useImagePixel(
         ctx.drawImage(img!, 0, 0);
         canvas.style.display = "none";
   
-        const pixel = ctx.getImageData(0, 0, 1, 1);
+        const pixel = ctx.getImageData(where, where, 1, 1);
         const data = pixel.data;
   
           rgbColor.current = `rgb(${data[0]} ${data[1]} ${data[2]} / ${data[3] / 255})`;
@@ -38,7 +43,7 @@ export default function useImagePixel(
       return () => img!.removeEventListener("load", pickPixel)
   
     }, [
-      card.backdrop_path, imageRef, setColor
+      backdrop_path, imageRef, setColor, where
     ])
 
     return rgbColor.current

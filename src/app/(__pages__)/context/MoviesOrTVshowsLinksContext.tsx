@@ -21,6 +21,8 @@ type CommonTypes = {
       recommendations: CommonTypes['INFOS']['BEFOREAFTER'],
       similar: CommonTypes['INFOS']['BEFOREAFTER'],
       images: CommonTypes['INFOS']['BEFOREAFTER'],
+      review: CommonTypes['INFOS']['BEFOREAFTER'],
+      watchProviders: CommonTypes['INFOS']['BEFOREAFTER'],
       personDetails: CommonTypes['INFOS']['BEFOREAFTER'],
       personMovieCredits: CommonTypes['INFOS']['BEFOREAFTER'],
       personTVshowCredits: CommonTypes['INFOS']['BEFOREAFTER'],
@@ -30,35 +32,37 @@ type CommonTypes = {
 
 export type _Movies = {
   MEDIATYPE: string,
+  TRENDING: string,
+  LATEST: string,
 
   TOPLINKS: {
     NOWPLAYING: string,
     POPULAR: string,
     TOPRATED: string,
     UPCOMING: string
+    DISCOVER: string
   },
 
   CRIMEDRAMASCIFI: CommonTypes['CRIMEDRAMASCIFI'],
-  
   TRAILERS: string,
-
   INFOS: CommonTypes['INFOS']['MAIN']
 }
 
 export type _TVshows = {
   MEDIATYPE: string,
+  TRENDING: string,
+  LATEST: string,
 
   TOPLINKS: {
     AIRINGTODAY: string,
     ONTHEAIR: string,
     POPULAR: string,
     TOPRATED: string
+    DISCOVER: string
   },
 
   CRIMEDRAMASCIFI: CommonTypes['CRIMEDRAMASCIFI'],
-
   TRAILERS: string,
-
   INFOS: CommonTypes['INFOS']['MAIN'],
 
 }
@@ -70,12 +74,15 @@ export type _TVshows = {
 const allLinks = {
   _tvshows : {
     MEDIATYPE: 'tvshow',
+    TRENDING: 'https://api.themoviedb.org/3/trending/tv/day?language=en-US',
+    LATEST: 'https://api.themoviedb.org/3/tv/latest',
 
     TOPLINKS: {
+      POPULAR: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=',
+      TOPRATED: 'https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=',
       AIRINGTODAY: 'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=',
       ONTHEAIR: 'https://api.themoviedb.org/3/tv/on_the_air?language=en-US&page=',
-      POPULAR: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=',
-      TOPRATED: 'https://api.themoviedb.org/3/tv/top_rated?language=en-US&page='
+      DISCOVER: 'https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc'
     },
 
     CRIMEDRAMASCIFI: {
@@ -117,6 +124,14 @@ const allLinks = {
         beforeStr: 'https://api.themoviedb.org/3/tv/',
         afterStr: '/images'
       },
+      review: {
+        beforeStr: 'https://api.themoviedb.org/3/tv/',
+        afterStr: '/reviews?language=en-US&page='
+      },
+      watchProviders: {
+        beforeStr: 'https://api.themoviedb.org/3/tv/',
+        afterStr: '/watch/providers'
+      },
       personDetails: {
         beforeStr: 'https://api.themoviedb.org/3/person/',
         afterStr: '?language=en-US'
@@ -137,12 +152,15 @@ const allLinks = {
 
   _movies: {
     MEDIATYPE: 'movie',
+    TRENDING: 'https://api.themoviedb.org/3/trending/movie/day?language=en-US', 
+    LATEST: 'https://api.themoviedb.org/3/movie/latest',
     
     TOPLINKS: {
-      NOWPLAYING: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=',
       POPULAR: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=',
       TOPRATED: 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=',
-      UPCOMING: 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page='
+      UPCOMING: 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=',
+      NOWPLAYING: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=',
+      DISCOVER: 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc'
     },
 
     CRIMEDRAMASCIFI: {
@@ -184,6 +202,14 @@ const allLinks = {
         beforeStr: 'https://api.themoviedb.org/3/movie/',
         afterStr: '/images'
       },
+      review: {
+        beforeStr: 'https://api.themoviedb.org/3/movie/',
+        afterStr: '/reviews?language=en-US&page='
+      },
+      watchProviders: {
+        beforeStr: 'https://api.themoviedb.org/3/movie/',
+        afterStr: '/watch/providers'
+      },
       personDetails: {
         beforeStr: 'https://api.themoviedb.org/3/person/',
         afterStr: '?language=en-US'
@@ -205,15 +231,15 @@ const allLinks = {
 
 
 type MoviesOrTVshowsLinksContextType = {
-  moviesOrTVshows: string,
-  setMoviesOrTVshows: (moviesOrTVshows: string) => void,
+  moviesOrTVshows: 'movie' | 'tvshow',
+  setMoviesOrTVshows: (moviesOrTVshows: 'movie' | 'tvshow') => void,
   links: _TVshows | _Movies , 
   setLinks: (links: _TVshows | _Movies ) => void,
 }
 
 const defaultContextValue = {
-  moviesOrTVshows: 'tvshows',
-  setMoviesOrTVshows: (moviesOrTVshows: string) => {},
+  moviesOrTVshows: 'tvshow' as 'movie' | 'tvshow',
+  setMoviesOrTVshows: (moviesOrTVshows: 'movie' | 'tvshow') => {},
   links: {...allLinks._tvshows }, 
   setLinks: (links: _TVshows | _Movies ) => {},
 }
@@ -225,7 +251,7 @@ export function MoviesOrTVshowsLinksContextProvider({
   children 
 }: PropsWithChildren<{}>) {
 
-  const [moviesOrTVshows, setMoviesOrTVshows] = useState(defaultContextValue.moviesOrTVshows)
+  const [moviesOrTVshows, setMoviesOrTVshows] = useState<'movie' | 'tvshow'>('tvshow')
   const [links, setLinks] = useState<_TVshows | _Movies>({ ...allLinks._tvshows })
     
   const value = {
@@ -235,9 +261,9 @@ export function MoviesOrTVshowsLinksContextProvider({
   
 
   useEffect(() => {
-    if (moviesOrTVshows === 'tvshows') {
+    if (moviesOrTVshows === 'tvshow') {
       setLinks({ ...allLinks._tvshows })
-    } else if (moviesOrTVshows === 'movies') {
+    } else if (moviesOrTVshows === 'movie') {
       setLinks({ ...allLinks._movies })
     }
   }, [moviesOrTVshows])

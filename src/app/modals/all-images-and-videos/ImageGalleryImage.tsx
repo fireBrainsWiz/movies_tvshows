@@ -2,9 +2,9 @@ import { ImagePath, PLACEHOLDER_IMAGE } from "@/app/lib/types"
 import Image from "next/image"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { MediaTypeInfoType } from "@/app/lib/MediaTypeInfoTypes"
+import { CommonTypes } from "@/app/lib/MediaTypeInfoTypes"
 
-
-export default function ImageGalleryImage<T extends MediaTypeInfoType['images']['posters'][0]>(
+export default function ImageGalleryImage<T extends CommonTypes['Images']['posters'][0]>(
   {image, type
   }: {
     image: T,
@@ -13,8 +13,8 @@ export default function ImageGalleryImage<T extends MediaTypeInfoType['images'][
   ) {
 
 
-    const loadingContainerRef = 
-    useRef<HTMLParagraphElement | null>(null)
+  const loadingContainerRef = 
+  useRef<HTMLParagraphElement | null>(null)
   const imageRef = useRef<HTMLImageElement | null>(null)
 
     
@@ -52,7 +52,7 @@ export default function ImageGalleryImage<T extends MediaTypeInfoType['images'][
 
   return (
     <button 
-      className="m-[1px] relative bg-red-600 w-full"
+      className="m-[1px] relative w-full"
       onClick={() => {
         setIsLightOpacity(!isLightOpacity)
       }}
@@ -64,7 +64,7 @@ export default function ImageGalleryImage<T extends MediaTypeInfoType['images'][
         isLoading &&(
           <p 
             ref={loadingContainerRef}
-            className=" w-fullp h-full text-white  absolute top-0 bottom-0 flex items-center justify-center bg-stone-700 z-[1] pt-4 animate-pulse"
+            className=" w-full mx-auto h-full text-white  absolute top-0 left-0 right-0 flex items-center justify-center bg-stone-700 z-[1] pt-4 animate-pulse max-h-[55vh]"
             >
             Loading...
           </p>
@@ -79,11 +79,13 @@ export default function ImageGalleryImage<T extends MediaTypeInfoType['images'][
         onDragStart={e => e.preventDefault()}
         ref={imageRef}
         src={imageURL}
-        alt=''
-        width={200}
-        height={300}
+        alt={image.file_path}
+        width={800}
+        height={800}
         placeholder="blur"
         blurDataURL={PLACEHOLDER_IMAGE.TMDB_IMAGE}
+        // sizes="(100vw - 2rem) 33vw, (100vw - 2rem) 50vw, 33vw"
+        // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         onLoad={() => {
           setIsLoading(false)
         }}
@@ -92,10 +94,10 @@ export default function ImageGalleryImage<T extends MediaTypeInfoType['images'][
           setIsLoading(false)
         }}
         priority
-        className={`${type === 'posters' ? 'md:w-[30%]': 'md:w-[90%] h-auto'} w-full h-auto min-w-[150px] mx-auto`}
+        className={`${type === 'posters' ? 'md:w-[30%]': 'md:w-[90%] h-auto'} w-full h-auto min-w-[150px] mx-auto ${type === 'logos' ? 'max-h-[300px]' : 'h-auto'}`}
       />
     </button>
   )
 }
 
-const posterStyle = 'md:w-1/2'
+// const posterStyle = 'md:w-1/2'

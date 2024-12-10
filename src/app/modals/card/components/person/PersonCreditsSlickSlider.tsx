@@ -12,8 +12,13 @@ import { useContext, useEffect, useState } from "react";
 import Slider from "react-slick";
 
 
-export default function PersonCreditsSlickSlider(
-  {id}: {id: number}) {
+export default function PersonCreditsSlickSlider({
+  id, 
+  setPrsonCompZIndex
+}: {
+  id: number
+  setPrsonCompZIndex: (_: number) => void
+}) {
 
 
   // const slideRef  = useRef<Slider | null>(null)
@@ -34,6 +39,8 @@ export default function PersonCreditsSlickSlider(
   const [personTVshowCredits, setPersonTVshowCredits] = useState({} as MediaTypeInfoType['personTVshowCredits'])
 
 
+
+  // console.log(numOfSlidesPerRow)
 
   useEffect(() => {
     if (!id) return
@@ -86,6 +93,7 @@ export default function PersonCreditsSlickSlider(
     window.addEventListener('resize', watchWidth)
     return  () => {
       window.removeEventListener('resize', watchWidth)
+      clearTimeout(timerId)
     }
   }, [setNumOfSlidesPerRow])
 
@@ -104,12 +112,14 @@ export default function PersonCreditsSlickSlider(
 
   // if (!data?.results?.[0]) return null
 
+  
+
   return (
-    <>
+    <div>
 
     {
       personMovieCredits?.cast?.length > 0 && (
-        <div className="bg-green-500p my-5  px-7 ">
+        <div className="bg-green-500p my-5   px-7 ">
           <p 
             className="font-bold mb-2 capitalize">
             Movie Credits
@@ -141,7 +151,7 @@ export default function PersonCreditsSlickSlider(
                   <span key={i} 
                   onClick={()=> {
                     setMoviesOrTVshows('movies')
-                    setIsVisiblePerson(false)
+                    setPrsonCompZIndex(10)
                   }}
                   >
                     <Result 
@@ -191,7 +201,7 @@ export default function PersonCreditsSlickSlider(
                   <span key={i} 
                   onClick={()=> {
                     setMoviesOrTVshows('tvshows')
-                    setIsVisiblePerson(false)
+                    setPrsonCompZIndex(10)
                   }}
                   >
                     <Result 
@@ -205,7 +215,7 @@ export default function PersonCreditsSlickSlider(
       )
     }
 
-    </>
+    </div>
   )
 }
 

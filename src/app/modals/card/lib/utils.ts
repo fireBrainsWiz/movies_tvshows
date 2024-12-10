@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { TMDBOptions } from '@/app/client/helpers/TMDB_API'
 import { MediaTypeInfoType } from '@/app/lib/MediaTypeInfoTypes'
+import { PopularPeopleList } from '@/app/(__pages__)/popular-people/layout'
+import { TrailerType } from '@/app/lib/types'
 
-
-type StarDirectorWriterType = [
+export type StarDirectorWriterType = [
   string | null,
   {
     "id": number,
@@ -44,7 +45,8 @@ type StarDirectorWriterType = [
     "credit_id": string,
     "order": number
   }[]
- ]
+]
+
 
 export function starDirectorWriterCreator(
   whereToLookFrom: MediaTypeInfoType['credits']
@@ -55,7 +57,7 @@ export function starDirectorWriterCreator(
     //credits
     let name: string = ''
     let toReturn: 
-    MediaTypeInfoType['credits']['cast']
+    | MediaTypeInfoType['credits']['cast']
     | MediaTypeInfoType['credits']['crew'] = []
 
 
@@ -64,11 +66,13 @@ export function starDirectorWriterCreator(
       toReturn = whereToLookFrom.cast.filter((item) => {
         return item.known_for_department === 'Acting'
       })
+
     } else if (description === 'Director') {
       name='Director'
         toReturn =  whereToLookFrom.crew.filter((item) => {
           return item.known_for_department === 'Directing'
       })
+
     }else if (description === 'Writer') {
       name='Writer'
         toReturn = whereToLookFrom.crew.filter((item) => {
@@ -77,9 +81,9 @@ export function starDirectorWriterCreator(
     }
 
     return [
-      toReturn.length===0? null :
-      `${toReturn.length===1 ? name : name+'s' }`,
-      toReturn
+      toReturn.length===0
+        ? null : `${toReturn.length===1 
+          ? name : name+'s' }`, toReturn
     ]
     
   } else {
@@ -237,15 +241,22 @@ export function starDirectorWriterCreator(
 //   ]
 // }
 
-export async function getTrailer(url: string, id: number) {
-try {
-  const res = await axios(`${url}${id}/videos?language=en-US`, TMDBOptions)
-  if(!res.data?.results) throw new Error('No trailer found')
-  return res.data.results
 
-} catch(err: any) {
-  console.log(err)
-}
+export async function getTrailers(url: string, id: number): Promise<TrailerType[]> {
+  let trailer: TrailerType[] = []
+  
+  try {
+    const res = await axios(`${url}${id}/videos?language=en-US`, TMDBOptions)
+    if(!res.data?.results) throw new Error('No trailer found')
+      // console.log(res.data)
+    trailer = res.data.results
+    return trailer
+
+  } catch(err: any) {
+    console.log(err)
+  }
+
+  return trailer
 }
 
 
@@ -451,11 +462,73 @@ return hours && !minutes
 }
 
 export function formatNumber(n: number) {
-if (!n) return 'N/A'
-return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  if (!n) return 'N/A'
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
+export function getColorBasedOnFirstLetterAndFirstLetter(name: string) {
 
+  const COLORS = {
+    A: '#f43f5e',
+    B: '#3b82f6',
+    C: '#22c55e',
+    D: '#eab308',
+    E: '#a855f7',
+    F: '#ec4899',
+    G: '#f97316',
+    H: '#14b8a6',
+    I: '#6366f1',
+    J: '#8b5cf6',
+    K: '#84cc16',
+    L: '#d946ef',
+    M: '#334155',
+    N: '#06b6d4',
+    O: '#10b981',
+    P: '#0ea5e9',
+    Q: '#64748b',
+    R: '#f59e0b',
+    S: '#991b1b',
+    T: '#1e40af',
+    U: '#065f46',
+    V: '#854d0e',
+    W: '#86198f',
+    X: '#9d174d',
+    Y: '#9a3412',
+    Z: '#115e59',
+  }
+  
+  const firstLetter = name.charAt(0).toUpperCase();
+  let color = 'bg-gray-500';  
+  if (firstLetter in COLORS) {
+    color = COLORS[firstLetter as keyof typeof COLORS] || '#10b981';
+  }
+
+  return {firstLetter, color}; 
+}  
+
+
+export const getGenderByNumber = (number: number) => {
+  switch (number) {
+    case 1:
+      return 'Female';
+    case 2:
+      return 'Male';
+    case 3:
+      return 'Non-binary';
+    default:
+      return 'Not set / not specified';
+  }
+};
+
+
+export function getSortedPosterPathsOfKnownFors(
+  result: PopularPeopleList['results'][number]
+) {
+
+  return result.known_for
+  .sort((a, b) => b.popularity - a.popularity)
+  // .map((item) => item?.poster_path)
+}
 
 // const trailers = {
 //   "id": 572802,

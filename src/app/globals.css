@@ -26,15 +26,18 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-.slick-dots {
-  /* overflow: hidden !important; */
+
+
+.slick-dots li button::before
+{
+  color: #fff !important; 
+
 
 }
-
-.slick-dots li.slick-active button:before
+.slick-dots li.slick-active button::before
 {
     opacity: .75;
-    width: 20px !important;
+    width: 20px !important;/*each dot size*/
     height: 7px !important;
     border-radius: 2rem !important;
     background: #61da9a;
@@ -44,7 +47,7 @@ body {
     /* transition: width .2s linear, height .2s !important; */
 }
 
-select {
+.tv-or-movies-select, .seasons-select {
   background-color: transparent;
 
   -moz-appearance:none; /* Firefox */
@@ -87,6 +90,65 @@ li {
 
 
 
-svg {
+/* svg {
   transition: all 5s linear;
+} */
+
+#curve-canvas {
+  width: 100%;
+  height: 100%;
+  background: #0aefe3f9;
+} 
+
+
+.parts-selectors-view-area {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
 }
+.parts-selectors-view-area::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+
+.glowing-border {
+  /* border-bottom: #61da9a 2px solid; */
+  border-bottom: #61da9a 1px solid;
+}
+
+
+/*
+  .container{
+            background-color: aliceblue;
+            width: 100px;
+            height: 100px;
+        }
+        @media (max-width: 768px), (max-height: 500px) { 
+            .container{ 
+                background-color: grey;
+            }
+        }   
+*/
+
+
+
+/* Pertanto, quando la larghezza è compresa tra 600 px e 900 px o l'altezza è inferiore a 500 px, la seconda casella viene nascosta. */
+
+
+/* 
+ .box{
+            background-color: lightgreen;
+            width: 150px;
+            height: 150px;
+            margin: 2rem;
+            display: block;
+        }
+        @media (min-width: 600px) and 
+               (max-width: 900px), 
+               (max-height: 500px) { 
+            .box-2{ 
+                display: none;
+            }
+        }   
+ */
+
+

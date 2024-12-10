@@ -11,9 +11,9 @@ import MoviesOrTVshowsLinksContext from "../../(__pages__)/context/MoviesOrTVsho
 import MoviesOrTVshowsInfoContext from "../../(__pages__)/context/MoviesOrTVshowsInfoContext";
 import {getInfoDataFromAxios} from "../../(__pages__)/hooks/getDataFromAxios";
 import { TMDBOptions } from "../../client/helpers/TMDB_API";
-import {MediaTypeInfoType} from '@/app/lib/MediaTypeInfoTypes'
+import {MediaTypeInfoType, CommonTypes} from '@/app/lib/MediaTypeInfoTypes'
 import { 
-  starDirectorWriterCreator, getTrailer, getFirstXItems, calculateRuntime
+  starDirectorWriterCreator, getTrailers, getFirstXItems, calculateRuntime
 } from "./lib/utils";
 
 import BackdropImage  from "./components/BackdropImage";
@@ -22,20 +22,49 @@ import Similar from "./components/Similar";
 import Cast from "./components/Cast";
 import Starring from "./components/Starring";
 import PosterAndOthers from "./components/PosterAndOthers";
-import ThemeContext from "@/app/(__pages__)/context/ThemeContext";
+// import ThemeContext from "@/app/(__pages__)/context/ThemeContext";
 // import ImagesAndVideosContext from "@/app/(__pages__)/context/ImagesAndVideosContext";
 import StarDirectorWriterCreator from "./components/StarDirectorWriterCreator";
+import StarDirectorWriterCreatorBar from "./components/StarDirectorWriterCreatorBar";
 import SpokenLanguages from "./components/SpokenLanguages";
 import Keywords from "./components/Keywords";
 import Trailer from "./components/Trailer";
 import TitleImage from "./components/TitleImage";
+import Reviews from "./components/reviews/Reviews";
+import WatchProviders from "./components/watch-providers/WatchProviders";
+import { Companies } from "../search/components/company/Companies";
+import ShowSelectSeason from "./components/seasons/ShowSelectSeason";
+import useSeasonsStore from "@/app/(__pages__)/stores/seasons-store/seasons-store";
+import BackdropImageNormal from "./components/BackdropImageNormal";
+import useAllImagesAndVideosStore from "@/app/(__pages__)/stores/all-images-and-videos-store/all-images-and-videos-store";
+import { SeasonType } from "@/app/lib/MoviesOrTVshowsInfoContextType_tvshows";
+import { HiMiniArrowLongUp } from "react-icons/hi2";
+import LatestMoviesOrTvShows from "@/app/(__pages__)/(top_links)/popular/home-page-header-section/LatestMoviesOrTvShows";
 
 
+
+export type BackdropImageInfo = {
+  bounds: {
+    width: number, 
+    height: number, 
+    top: number, 
+    left: number,
+    x: number,
+    y: number
+  }
+  backdropImageRef: {
+    current: HTMLImageElement | null
+  }
+}
 
 export default function CardPage() {
 
-
   const sectionRef = useRef<HTMLElement>(null)
+  // const backdropImageRef = useRef<HTMLImageElement | null>(null)
+  const cardPageMainContainerRef = useRef<HTMLDivElement | null>(null)
+  const titleImageContainerRef = useRef<HTMLDivElement | null>(null)
+  const posterAndOthersContainerRef = useRef<HTMLDivElement | null>(null)
+  const overviewContainerRef = useRef<HTMLDivElement | null>(null)
   
   const {isVisibleCardPage, setIsVisibleCardPage, card, setCard, scrollTop} = useContext(CardBeingViewedContext)
 
@@ -44,39 +73,63 @@ export default function CardPage() {
   const {
     details, setDetails, credits, 
     setCredits, contentRatings, setContentRatings,
-    keywords, setKeywords, images, setImages,
+    keywords, setKeywords,
   } = useContext(MoviesOrTVshowsInfoContext)!
 
 
-  const {
-    backdropImageColor, setBackdropImageColor,
-    isLoadingBackdropImage, setIsLoadingBackdropImage
-  } = useContext(ThemeContext)
+  // const {} = useContext(ThemeContext)
 
+
+  const {options, setOptions, setSelectedSeason} = useSeasonsStore()
+  const {setTitleImageImages} = useAllImagesAndVideosStore()
+
+  
   // const {
-  //   setIsVisibleAllImages,
-  //   setIsVisibleAllVideos
-  // } = useContext(ImagesAndVideosContext)
-
-  // const [isLoadingImage, setIsLoadingImage] = useState(true)
+    //   setIsVisibleAllImages,
+    //   setIsVisibleAllVideos
+    // } = useContext(ImagesAndVideosContext)
+    
+    // const [isLoadingImage, setIsLoadingImage] = useState(true)
+  const [backdropImageColor, setBackdropImageColor] = useState('')
+  const [isLoadingBackdropImage, setIsLoadingBackdropImage] = useState(true)
   const [trailers, setTrailers] = useState<TrailerType[]>([])
   const [rating, setRating] = useState('')
+  const [images, setImages] = useState<CommonTypes['Images'] | null>(null)
+
+  const [backdropImageInfo, setBackdropImageInfo] = useState<BackdropImageInfo>({
+    bounds: {width: 0, height: 0, top: 0, left: 0, x: 0, y: 0},
+    backdropImageRef: {
+      current: null
+    }
+  })
   
+  const [forBigScreen, setForBigScreen] = useState(false)
+  const [colorThiefColor, setColorThiefColor] = useState<number[][]>()
+
+  const [showScrollToTopBtn, setShowScrollToTopBtn] = useState(false)
+
+
+  // console.log({backdropImageColor})
   // console.log(images.logos)
   // let m = 0
   // console.log({m: m++})
 
+  // console.log({details})
+  
+  
 
-  // console.log(details)
-  // console.log(credits)
+  const blacklist = 46952 
+  const ncis = 17610 
+  const homeland = 1407 
+  const time = 126116 
 
   const myCard = {
     adult: false,
-    title: "NCIS",
+    title: "Blacklist",
     backdrop_path: "/dAepkmD4vdfhS82r2OIqF1nwGR5.jpg",
     first_air_date: "2009-09-22",
     genre_ids:[ 10759, 18, 80],
-    id:  46952 || 17610,
+    id: !homeland || blacklist || ncis,
     name: "NCIS: Los Angeles",
     origin_country: [ "US" ],
     original_language: "en",
@@ -89,7 +142,11 @@ export default function CardPage() {
   }
 
   function handleCloseCardPageClick() {
-    document.body.style.overflow = 'auto'
+    // console.log(
+    //   location.href,
+    //   location.pathname
+    // )
+    document.body.style.overflow = location.pathname === '/' ? 'auto': 'hidden'
     setIsLoadingBackdropImage(true)
     setIsVisibleCardPage(false)
 
@@ -100,13 +157,44 @@ export default function CardPage() {
     });
   }
 
-  // console.log(card.id)
+  function scrollToTp() {
+    const scrollElem = sectionRef.current
+    if (!scrollElem) return
+
+    // scrollElem.scrollTop = 0; 
+    scrollElem.scrollTo ({top: 0, left: 0, behavior: 'smooth'}); 
+  }
 
 
   useEffect(() => {
-    if (card.backdrop_path) return
-    // setCard(myCard)
-    // setIsVisibleCardPage(true)
+    const scrollElem = sectionRef.current
+    if (!scrollElem) return
+
+    const handleScroll = () => {
+      setShowScrollToTopBtn(scrollElem.scrollTop > 300)
+    }
+
+    scrollElem.addEventListener('scroll', handleScroll)
+    return () => scrollElem.removeEventListener('scroll', handleScroll)
+
+  }, [sectionRef.current])
+
+  // console.log(card.id)
+
+
+  // useEffect(() => {
+  //   //to be turned off later
+  //   if ('seasons' in details) {
+  //     setSelectedSeason(details.seasons[1])
+  //   }
+  // }, [details])
+
+  useEffect(() => {
+    //to be turned off later
+    if (!(card.backdrop_path)) {
+      setCard(myCard)
+      setIsVisibleCardPage(true)
+    }
   }, [])
 
   useEffect(() => {
@@ -122,27 +210,31 @@ export default function CardPage() {
 
 
   useEffect(() => {
-    async function getAndSetData() {
-      if (!isVisibleCardPage) return
+    if (!isVisibleCardPage || !card.id) return
 
+    async function getAndSetData() {
       try {
         const detailsRes: MediaTypeInfoType['details'] = 
-        await getInfoDataFromAxios({URL: `
+        await axios(`
         ${links.INFOS.details.beforeStr}${card.id}${links.INFOS.details.afterStr}
-        `})
-        setDetails(detailsRes)
-        // if ("episode_run_time" in datailsRes) {
-        //   console.log(datailsRes)
-        // }
+        `, TMDBOptions).then(res => res.data)
+
+        if ('seasons' in detailsRes) {
+          const filteredSeasons = detailsRes.seasons.filter(
+            season => !season.name.includes('Specials')
+          )
+          
+          detailsRes.seasons = filteredSeasons
+          setOptions(filteredSeasons)
+          setSelectedSeason(filteredSeasons[0])
+        }
         
-        // if (typeof details === MediaTypeInfoType['details']) return
+        setDetails(detailsRes)
 
       } catch(err: any) {
         console.log(err)
       }
 
-    // console.log(datailsRes)
-      // setCard(res)
     }
     getAndSetData()
   }, [
@@ -150,9 +242,9 @@ export default function CardPage() {
   ])
   
   useEffect(() => {
-    async function getAndSetData() {
-      if (!isVisibleCardPage || !card.id) return
+    if (!isVisibleCardPage || !card.id) return
 
+    async function getAndSetData() {
       try {
         const {data}: {data: MediaTypeInfoType['credits']} = 
         await axios(`
@@ -171,14 +263,14 @@ export default function CardPage() {
   ])
   
   useEffect(() => {
-    async function getAndSetData() {
-      if (!isVisibleCardPage) return
+    if (!isVisibleCardPage || !card.id) return
 
+    async function getAndSetData() {
       try {
         const keywordsRes: MediaTypeInfoType['keywords'] = 
-        await getInfoDataFromAxios({URL: `
+        await axios(`
         ${links.INFOS.keywords.beforeStr}${card.id}${links.INFOS.keywords.afterStr}
-        `})
+        `, TMDBOptions).then(res => res.data)
         setKeywords(keywordsRes)
 
       } catch(err: any) {
@@ -192,15 +284,15 @@ export default function CardPage() {
 
 
   useEffect(() => {
-    async function getAndSetData() {
-      // if (!isVisibleCardPage) return
+    if (!isVisibleCardPage || !card.id) return
 
+    async function getAndSetData() {
       try {
         const contentRatingsRes: 
         MediaTypeInfoType['contentRatings'] = 
-        await getInfoDataFromAxios({URL: `
+        await axios(`
         ${links.INFOS.contentRatings.beforeStr}${card.id}${links.INFOS.contentRatings.afterStr}
-        `})
+        `, TMDBOptions).then(res => res.data)
         setContentRatings(contentRatingsRes)
 
       } catch(err: any) {
@@ -212,7 +304,7 @@ export default function CardPage() {
     }
     getAndSetData()
   }, [
-    card.id, links.INFOS.contentRatings.beforeStr, links.INFOS.contentRatings.afterStr, setContentRatings
+    card.id, links.INFOS.contentRatings.beforeStr, links.INFOS.contentRatings.afterStr, setContentRatings, isVisibleCardPage
   ])
 
   // rating
@@ -224,7 +316,7 @@ export default function CardPage() {
 
     rating = contentRatings.results
     .find(item => item.iso_3166_1 === 'US') 
-
+    
     if (!rating) return
 
     if ('rating' in rating) {
@@ -262,520 +354,275 @@ export default function CardPage() {
   }, [isVisibleCardPage])
 
   useEffect(() => {
-    if (!isVisibleCardPage) return
+    if (!isVisibleCardPage || !card.id) return
 
     (async () => {
-      const res = await getTrailer(links.TRAILERS, card.id)
+      const res = await getTrailers(links.TRAILERS, card.id)
       setTrailers(res)
     })()
   }, [links, card.id, isVisibleCardPage])
 
 
-  //getAllImages
+  // getAllImages
   useEffect(() => {
-    if(!isVisibleCardPage || !card?.id) return
-
     async function getImages() {
+      if(!isVisibleCardPage || !card?.id) return
+
       try {
-        const {data}: {data: typeof images} = await axios(
-          `${
-            links.INFOS.images.beforeStr}${card.id}${links.INFOS.images.afterStr
-            }`,
+        const data: typeof images = await axios(`${
+          links.INFOS.images.beforeStr}${card.id}${links.INFOS.images.afterStr}`,
           TMDBOptions
-        ) 
-        // console.log(data)
+        ).then (res => res.data)
         setImages(data)
+        setTitleImageImages(data)
 
       } catch (error) {
-        console.log(error)
+        console.log('error is: ', error)
       }
     }  
     getImages()
+
   }, [
-    isVisibleCardPage, setImages, card.id, 
+    isVisibleCardPage, card.id, 
     links.INFOS.images.beforeStr, links.INFOS.images.afterStr
   ])
 
-  // console.log(credits.cast)
 
-  // const bloods = {
-  //   "page": 1,
-  //   "results": [
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/lyWQh0lF1nUFLWrzZmeTh3Sdjw9.jpg",
-  //       "id": 84768,
-  //       "name": "Blood",
-  //       "original_language": "en",
-  //       "original_name": "Blood",
-  //       "overview": "Cat Hogan returns to West Meath upon her mother's sudden death - she has an accident at home and died (or was it an accident?). Blood is about old secrets, older betrayals, mind games and the lies family tell each other.",
-  //       "poster_path": "/aY23kASw02LgWBfoqBjLhCTZDTH.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         18,
-  //         9648
-  //       ],
-  //       "popularity": 13.873,
-  //       "first_air_date": "2018-10-08",
-  //       "vote_average": 6.8,
-  //       "vote_count": 44,
-  //       "origin_country": [
-  //         "IE"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/tNWZ1fyKYl2zWRWsyXTTH7OwuQr.jpg",
-  //       "id": 746524,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "Jess, a newly separated mother and nurse, moves into her old family farmhouse with Tyler, her teenage daughter, and Owen, her eight-year-old son. One night, the family dog senses something in the woods and runs off to find it. He returns a couple of days later and attacks Owen, savagely biting him before Jess is able to intervene. Owen is rushed to the hospital. His condition worsens, and no one can figure out why... until Jess discovers a disturbing cure...",
-  //       "poster_path": "/gCUFtTvjK4gbmjVxhx8bhyOhAeW.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         27,
-  //         9648,
-  //         53
-  //       ],
-  //       "popularity": 26.343,
-  //       "release_date": "2023-01-12",
-  //       "video": false,
-  //       "vote_average": 6.7,
-  //       "vote_count": 142
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/axhScggZyi0fOxvVd8pd0zwygub.jpg",
-  //       "id": 136278,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "Thriller charting the moral collapse of a police family. Two cop brothers, smothered by the shadow of their former police chief father, must investigate a crime they themselves have committed. Feature film adaptation of the 2004 series Conviction.",
-  //       "poster_path": "/ZzTFu00nw3t7XD0ZAajuERkDX6.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         18,
-  //         53,
-  //         80
-  //       ],
-  //       "popularity": 15.826,
-  //       "release_date": "2012-10-09",
-  //       "video": false,
-  //       "vote_average": 5.83,
-  //       "vote_count": 147
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/cw8B3TTL8LSmAu31Db9MzFNJ273.jpg",
-  //       "id": 61440,
-  //       "name": "Strike the Blood",
-  //       "original_language": "ja",
-  //       "original_name": "ストライク・ザ・ブラッド",
-  //       "overview": "Kojou Akatsuki's days as an ordinary high school student in the Demon District of Itogami Island come to an abrupt end after a fateful encounter leaves him with the remarkable abilities of a vampire.  It isn't long before he is thrust into the center of attention when it is discovered that he is the fourth primogenitor, an immensely powerful vampire whom most consider to be merely a legend. Fearing Kojou's destructive potential, the Lion King Organization sends in an apprentice sword-shaman, Yukina Himeragi, to monitor, and should he become a threat, kill the boy deemed the world's most powerful vampire. Forced together by circumstance, the two form an unlikely alliance as Kojou comes to terms with his abilities and they both struggle to protect the city from various emerging chaotic forces.",
-  //       "poster_path": "/rbGaCkEVS7PE5fKKMAmvO4XZXyA.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         10759,
-  //         16,
-  //         10765
-  //       ],
-  //       "popularity": 137.731,
-  //       "first_air_date": "2013-10-04",
-  //       "vote_average": 7,
-  //       "vote_count": 53,
-  //       "origin_country": [
-  //         "JP"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/goDtZCB5pFIuuSfYDvApe6iXTID.jpg",
-  //       "id": 32692,
-  //       "name": "Blue Bloods",
-  //       "original_language": "en",
-  //       "original_name": "Blue Bloods",
-  //       "overview": "A drama about a multi-generational family of cops dedicated to New York City law enforcement. Frank Reagan is the New York Police Commissioner and heads both the police force and the Reagan brood. He runs his department as diplomatically as he runs his family, even when dealing with the politics that plagued his unapologetically bold father, Henry, during his stint as Chief.",
-  //       "poster_path": "/q1WlrxnCvNhBjJ4N7V0JQXjnIBN.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         18,
-  //         80
-  //       ],
-  //       "popularity": 966.619,
-  //       "first_air_date": "2010-09-24",
-  //       "vote_average": 7.752,
-  //       "vote_count": 794,
-  //       "origin_country": [
-  //         "US"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/hsal8CpIdnimtIDy9H2MVoxWMUk.jpg",
-  //       "id": 73537,
-  //       "name": "Christmas on Blood Mountain",
-  //       "original_language": "no",
-  //       "original_name": "Jul i Blodfjell",
-  //       "overview": "A family gathering doesn't go as planned, as one by one is being killed by a mysterious murderer.",
-  //       "poster_path": "/9g43enVgfb6CYZ0oIfKXAsF2bIN.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         80,
-  //         35
-  //       ],
-  //       "popularity": 30.429,
-  //       "first_air_date": "2017-12-01",
-  //       "vote_average": 5.1,
-  //       "vote_count": 5,
-  //       "origin_country": [
-  //         "NO"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/4Jrhz7c2skb6jKVql10zktXpJ0b.jpg",
-  //       "id": 913812,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "Widow Chloe travels to Japan for work where she is welcomed by an old friend, Toshi. Sliding between the melancholy of loss and the awe of perspectives changed, Chloe wanders an unfamiliar landscape where love has carved all the guiding grooves.",
-  //       "poster_path": "/tpXLySHYBJyLqmT818FskYRlliG.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         18
-  //       ],
-  //       "popularity": 2.751,
-  //       "release_date": "2022-01-24",
-  //       "video": false,
-  //       "vote_average": 1,
-  //       "vote_count": 1
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 86195,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "After not having seen each other in five years, Chris Terry goes to visit his younger sister Noelle Terry in Montréal. Their lives, both together and apart, have been turbulent ones with something toxic having affected the way they interact with each other.",
-  //       "poster_path": "/nmwMEiXg8dgjQ4ud49D3PKsN9xs.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         18
-  //       ],
-  //       "popularity": 4.941,
-  //       "release_date": "2004-10-22",
-  //       "video": false,
-  //       "vote_average": 5.6,
-  //       "vote_count": 8
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/ArizfV38KXLHRIuEfMasUia6OFc.jpg",
-  //       "id": 191378,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "20 years ago, Carl was responsible for genetically engineering a girl with narcotic blood. Now he's brought her home - and the boundaries between love and addiction are becoming increasingly blurred.",
-  //       "poster_path": "/rZDhnwIds93t6l7ix9kbAANcX3N.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         27,
-  //         18
-  //       ],
-  //       "popularity": 3.196,
-  //       "release_date": "2000-06-30",
-  //       "video": false,
-  //       "vote_average": 4.444,
-  //       "vote_count": 9
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 438385,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "Made with the filmmaker’s blood, a testament to the ideals that we fight and die for.",
-  //       "poster_path": null,
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         16
-  //       ],
-  //       "popularity": 0.662,
-  //       "release_date": "2017-01-20",
-  //       "video": false,
-  //       "vote_average": 4,
-  //       "vote_count": 1
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/bPn2W3r1o9219gyHFSJKcmcdyaC.jpg",
-  //       "id": 112661,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "A mysterious family moves into their new home, but their secrets are far more sinister than anyone could imagine.",
-  //       "poster_path": "/nAIbRfmXVy9V2jhlCgfeVyWRh0r.jpg",
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         27
-  //       ],
-  //       "popularity": 2.87,
-  //       "release_date": "1973-09-01",
-  //       "video": false,
-  //       "vote_average": 5.1,
-  //       "vote_count": 15
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/ifGVUbvl36CnY9mp4kquK8In1Rh.jpg",
-  //       "id": 118956,
-  //       "name": "DOTA: Dragon's Blood",
-  //       "original_language": "en",
-  //       "original_name": "DOTA: Dragon's Blood",
-  //       "overview": "After encounters with a dragon and a princess on her own mission, a Dragon Knight becomes embroiled in events larger than he could have ever imagined.",
-  //       "poster_path": "/6Qwwam0TQEMQmFMagjtLmcQHJYs.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         10765,
-  //         10759,
-  //         16
-  //       ],
-  //       "popularity": 81.58,
-  //       "first_air_date": "2021-03-25",
-  //       "vote_average": 7.829,
-  //       "vote_count": 390,
-  //       "origin_country": [
-  //         "US"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/aKqNdwQOpHc4WoghCrPaAWeFka1.jpg",
-  //       "id": 91657,
-  //       "name": "Young Blood",
-  //       "original_language": "zh",
-  //       "original_name": "大宋少年志",
-  //       "overview": "Set in the Song Dynasty of ancient China. Six brave and smart young men and women work together at the hidden front to keep the empire and people safe.",
-  //       "poster_path": "/3eGiEXsC05aEJJhdA7cJuwXHJ0K.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         9648
-  //       ],
-  //       "popularity": 25.679,
-  //       "first_air_date": "2019-06-03",
-  //       "vote_average": 7.4,
-  //       "vote_count": 13,
-  //       "origin_country": [
-  //         "CN"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 418643,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "A recently engaged bride-to-be becomes determined to find her blood family before she marries. But when she meets her unusual kin in the deep woods of Florida, she begins reliving horrifying suppressed memories that lead her to believe her newfound relatives may be hiding some dark secrets, and she starts to discover horrifying truths about her birth family.",
-  //       "poster_path": null,
-  //       "media_type": "movie",
-  //       "genre_ids": [
-  //         27
-  //       ],
-  //       "popularity": 1.96,
-  //       "release_date": "",
-  //       "video": false,
-  //       "vote_average": 0,
-  //       "vote_count": 0
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/fkgvxWEJHJGHIVhdixBjpclOHMz.jpg",
-  //       "id": 64375,
-  //       "name": "Mobile Suit Gundam: Iron-Blooded Orphans",
-  //       "original_language": "ja",
-  //       "original_name": "機動戦士ガンダム 鉄血のオルフェンズ",
-  //       "overview": "When Mikazuki Augus, a young member of a private security company known as the CGS, accepts a mission to protect a young woman seeking to liberate the Martian city of Chryse from Earth’s rule, he sets off a chain of events that threatens to send the galaxy back to war.",
-  //       "poster_path": "/x5M9yxvBhrUP4rsKSl3d9VzK7O.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         16,
-  //         10768,
-  //         10759,
-  //         10765
-  //       ],
-  //       "popularity": 58.625,
-  //       "first_air_date": "2015-10-04",
-  //       "vote_average": 7.012,
-  //       "vote_count": 41,
-  //       "origin_country": [
-  //         "JP"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 822895,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "",
-  //       "poster_path": null,
-  //       "media_type": "movie",
-  //       "genre_ids": [],
-  //       "popularity": 0.6,
-  //       "release_date": "2003-01-01",
-  //       "video": false,
-  //       "vote_average": 0,
-  //       "vote_count": 0
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/fXQEjHH26D0nmVA7I8J3BS4DKHs.jpg",
-  //       "id": 219290,
-  //       "name": "Blood Flowers",
-  //       "original_language": "tr",
-  //       "original_name": "Kan Çiçekleri",
-  //       "overview": "The narrative of Dilan, whose aspirations and hopes were dashed on the one hand, and Baran, who had to marry to stop the feud and save her brother from this cycle on the other. This marriage, however, is a prison for the two of them, and his uncle, who is jealous of his wealth, wishes to renew the rivalry. This conflicted relationship will cause strong winds to blow between two hearts; will this marriage become a true marriage?",
-  //       "poster_path": "/o6tosm7V0SMBlI1KsTUxPM9Papp.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         18
-  //       ],
-  //       "popularity": 132.776,
-  //       "first_air_date": "2022-12-05",
-  //       "vote_average": 7.7,
-  //       "vote_count": 14,
-  //       "origin_country": [
-  //         "TR"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 859632,
-  //       "title": "Blood",
-  //       "original_language": "en",
-  //       "original_title": "Blood",
-  //       "overview": "When a down-on-his-luck 20-something discovers his blood cures cancer, he finds himself dangerously poised between the rush of fame and fortune and the hot pursuit of Big Pharma bent on eliminating him and his 'miracle blood.'",
-  //       "poster_path": null,
-  //       "media_type": "movie",
-  //       "genre_ids": [],
-  //       "popularity": 2.243,
-  //       "release_date": "",
-  //       "video": false,
-  //       "vote_average": 0,
-  //       "vote_count": 0
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": "/m8b52XWf1jO11Aeaz5vPpAgeqZp.jpg",
-  //       "id": 62327,
-  //       "name": "Blood Blockade Battlefront",
-  //       "original_language": "ja",
-  //       "original_name": "血界戦線",
-  //       "overview": "One day, New York City as we know it vanished overnight into a mysterious fog. Now known as Hellsalem's Lot, it has become a place where another world beyond imagining is connected to our reality. The balance within this new world is protected by a secret society known as Libra. Leo, a journalist and photographer who arrives in the city, is unexpectedly recruited to join their ranks.",
-  //       "poster_path": "/37Kvfpk5rxX2FYcAm8oiuqxkbfv.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         16,
-  //         10765,
-  //         10759,
-  //         35
-  //       ],
-  //       "popularity": 72.849,
-  //       "first_air_date": "2015-04-05",
-  //       "vote_average": 7,
-  //       "vote_count": 104,
-  //       "origin_country": [
-  //         "JP"
-  //       ]
-  //     },
-  //     {
-  //       "adult": false,
-  //       "backdrop_path": null,
-  //       "id": 40540,
-  //       "name": "Bloodletting & Miraculous Cures",
-  //       "original_language": "en",
-  //       "original_name": "Bloodletting & Miraculous Cures",
-  //       "overview": "Follows the lives of three young doctors fresh from medical school, and embarking on their new careers.",
-  //       "poster_path": "/wz18bG1swHTcQ7YhPfSRSY9P7b9.jpg",
-  //       "media_type": "tv",
-  //       "genre_ids": [
-  //         18
-  //       ],
-  //       "popularity": 17.778,
-  //       "first_air_date": "2010-01-10",
-  //       "vote_average": 0,
-  //       "vote_count": 0,
-  //       "origin_country": [
-  //         "CA"
-  //       ]
-  //     }
-  //   ],
-  //   "total_pages": 204,
-  //   "total_results": 4071
-  // }
+  
+// for small screen
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(`(max-width: 1020px)`)//lg
+    
+    function my() {
+      if (mediaQuery.matches) {
+        setForBigScreen(false)
+      } else {
+        setForBigScreen(true)
+      }
+    }
+    my()
 
-  // console.log(Object?.groupBy(bloods.results, ({media_type})=> media_type))
+    mediaQuery.addEventListener('change', my)
+    return () => mediaQuery.addEventListener('change', my)
+  }, [])
 
-  if (!isVisibleCardPage) return null
 
-  // console.log('cast', credits.cast)
+  const alteredBg = ((bg = 'rgb(3 3 3 / 1)') => {
+    return bg.split('/')[0].replace(/ /g, ',').replace(/rgb/g, 'rgba') + '0.2)';
+  })(backdropImageColor)
+
+  // return null
+
   return (
     <section 
+      key={card.id}
       ref={sectionRef}
-      className={`bg-[#222] absolute w-full h-screen top-0 z-10 ${isVisibleCardPage ? 'left-0' : 'left-[-100%]'} [transition:left_300ms_ease-in-out] overflow-y-auto mb-4`}>
-      
-    
-      <div className="w-full flex justify-end gap-2  h-[50px] bg-red-600p"> 
-        <button 
-          className="text-white text-2xl cursor-pointer bg-red-500p p-4"
-          onClick={handleCloseCardPageClick}>
-          <TfiClose />
-        </button>
-      </div>
+      className={`bg-[#222] absolute w-full h-screen top-0 z-20 ${isVisibleCardPage ? 'left-0' : 'left-[-100%]'} overflow-hidden overflow-y-auto mb-4 `}
+      >
 
-      <div className="borderp border-stone-500 relative grid grid-cols-[100%] grid-flow-row md:grid-cols-[65%_35%] ">
-
-        <div className="bg-cyan-600p ">
-          <BackdropImage 
-            card={card}
-            isLoadingBackdropImage={isLoadingBackdropImage}
-            setIsLoadingBackdropImage={setIsLoadingBackdropImage}
-            setBackdropImageColor={setBackdropImageColor}
-          />
-
-          <div className="p-4 bg-yellow-500/20p relative"
-          >
-            <div className="w-full h-full bg-red-500p absolute top-0 left-0 z-[-1] opacity-30"
-              style={{backgroundColor: backdropImageColor}}
-            ></div>
-
-            <div className="flex justify-between gap-4">
-              <h1 className="text-4xl font-black p-4p mb-2 bg-red-500p">
-                {card.title || card.name}
-              </h1>
-              <TitleImage card={card} images={images} />
-            </div>
-
-            <p className="mb-8 italic">{details.tagline}</p>
-
-            {
-              'keywords' in keywords && keywords.keywords?.[0] && (
-                <span className="text-2xl">A {links.MEDIATYPE} about:</span>
-              )
-            }
-            <ul className="bg-sky-800p w-full mb-4 flex flex-wrap gap-x-10 p-4">
-                <Keywords keywords={keywords} />
-            </ul>
+      <div>
+        <div className="pb-[50px] border-b border-white/70 dark:border-gray-500"
+          style={{
+            background:  alteredBg
+          }}
+        >
+          <div className="w-full flex justify-end gap-2  h-[50px] "> 
+            <button 
+              className="text-white text-2xl cursor-pointer bg-red-500p p-4"
+              onClick={handleCloseCardPageClick}>
+              <TfiClose />
+            </button>
           </div>
 
-          {/* Starring */}
-          <div className=" my-10 ">
+          <div className="max-w-[1546px] mx-auto">
+            <div className=" bg-green-900p  relative grid grid-cols-[100%] grid-flow-row md:grid-cols-[65%_35%] [@media_(max-width:1020px)]:flex [@media_(max-width:1020px)]:flex-wrap border-b border-white/70 dark:border-gray-500 overflow-hidden [@media_(max-width:1020px)]:overflow-auto"
+            ref={cardPageMainContainerRef}    
+            >
+              <div 
+              className="w-full h-full bg-red-500p absolute top-0 left-0 z-[-1] opacity-30"
+              style={{backgroundColor: backdropImageColor}}
+              />
+
+              <div className="bg-cyan-600p max-w-[938px] [@media_(max-width:1020px)]:max-w-[100vw]">
+                <div className="border-b border-white/70 dark:border-gray-500">
+                  <BackdropImageNormal 
+                    card={card}
+                    isLoadingBackdropImage={isLoadingBackdropImage}
+                    setIsLoadingBackdropImage={setIsLoadingBackdropImage}
+                    setBackdropImageColor={setBackdropImageColor}
+                    setBackdropImageInfo={setBackdropImageInfo}
+                  />
+                </div>
+
+                <div className="p-4 bg-yellow-500p relative pr-10p [@media_(max-width:1020px)]:pr-4 [@media_(min-width:1021px)]:max-w-[885.3px]"
+                  ref={titleImageContainerRef}
+                >
+                  <div className="flex justify-between gap-4 bg-red-500p my-4">
+                    {/* {
+                      images && (
+                        <TitleImage 
+                          card={card} 
+                          images={images} 
+                          setColorThiefColor={setColorThiefColor} 
+                        />
+                      )
+                    } */}
+                    
+                    {/* {
+                      links.MEDIATYPE === 'tvshow' && 'seasons' in details && details.seasons?.[0]?.id && (
+                        <ShowSelectSeason  />
+                      )
+                    } */}
+                  </div>
+
+                  {/* <p className="mb-8 italic">{details.tagline}</p> */}
+
+                  <div className="bg-green-600p">
+                    {/* {
+                      'keywords' in keywords && keywords.keywords?.[0]  || 'results' in keywords && keywords.results?.[0] ? (
+                        <p className="text-2xl mb-3">A {links.MEDIATYPE} about:</p>
+                      )
+                      : null
+                    } */}
+                    <ul className="bg-sky-800p w-full pl-4p flex gap-x-10 overflow-hidden overflow-x-auto [@media_(max-width:1020px)]:overflow-x-hidden [@media_(max-width:1020px)]:overflow-visible [@media_(max-width:1020px)]:flex-wrap">
+                      {/* <Keywords keywords={keywords} /> */}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`bg-blue-700p absolute [@media_(max-width:1020px)]:static z-10 mt-10 md:mt-0 max-w-[635px] [@media_(max-width:1020px)]:max-w-max`}
+                style={{
+                  // height: `${backdropImageInfo.bounds.height}px`,
+                  top: `0`,
+                  bottom: `0`,
+                  left: `${backdropImageInfo.bounds.width}px`,
+                }}
+              >
+                <div className="bg-orange-700p border-b border-white/70 dark:border-gray-500 [@media_(max-width:1020px)]:border-none overflow-hidden [@media_(max-width:1020px)]:overflow-auto"
+                  ref={overviewContainerRef}
+                  style={{
+                    height: forBigScreen 
+                      ? `${backdropImageInfo.bounds.height+1}px` : `max-content`,
+                  }}
+                >
+                  <p className="text-xl hidden [@media_(max-width:1020px)]:block px-4 my-2 pb-1">
+                    Overview
+                  </p>
+
+                  <p className="bg-blue-500p max-h-[100px] [@media_(min-width:1070px)]:max-h-[115px] [@media_(min-width:1170px)]:max-h-[150px] [@media_(min-width:1400px)]:max-h-[180px] [@media_(max-width:1020px)]:max-h-[300px] overflow-hidden overflow-y-auto [@media_(max-width:1020px)]:w-[70ch]p px-4 [@media_(max-width:1020px)]:mb-6">
+                    {card.overview}
+                  </p>
+
+                  {/* yellow star and others  */}
+                  {/* <p className="flex flex-nowrap gap-x-2 items-center justify-between  xl:my-[10px] my-[8px] [@media_(max-width:1020px)]:my-6 [@media_(min-width:1030px)]:my-2 pt-2 border-t border-white/70 dark:border-gray-500 px-4 ">
+                    <span className="flex items-center gap-1">
+                      <FaStar color="yellow"/>
+                      {
+                        card.vote_average && card.vote_average.toFixed(1)
+                      }
+                    </span>
+                      {card.first_air_date?
+                        <span>
+                            {card?.first_air_date?.split('-')[0]}
+                        </span> 
+                        : null
+                      } 
+                    <span>{rating || 'N/A'}</span>
+                    <span>
+                      {
+                        'runtime' in details 
+                        ? (
+                          calculateRuntime(details?.runtime) 
+                        )
+                        : (
+                          details?.last_episode_to_air?.runtime &&
+                            calculateRuntime(details.last_episode_to_air.runtime)
+                        )
+                      }
+                    </span>
+                  </p> */}
+
+                  <div className="relative h-[34px] xl:my-[10px] [@media_(max-width:1020px)]:my-6 leading-[20px] [@media_(max-width:1020px)]:leading-[24px] [@media_(max-width:1020px)]:h-auto">
+                    {/* Genres */}
+                    <ul className="flex flex-nowrap mx-4 overflow-hidden overflow-x-auto absolute inset-0 [@media_(max-width:1020px)]:static [@media_(max-width:1020px)]:overflow-visible [@media_(max-width:1020px)]:flex-wrap [@media_(max-width:1020px)]:overflow-x-hidden"
+                    >
+                      {/* {
+                        details.genres && details.genres.map((genre, i) => (
+                          <li key={i} className="list-disc capitalize mx-2 first:ml-0 whitespace-nowrap [@media_(max-width:1020px)]:whitespace-normal [@media_(max-width:1020px)]:my-1 first:list-none">
+                            {genre.name}
+                          </li>
+                        ))
+                      } */}
+                    </ul>
+                  </div>
+
+                  <p className="xl:my-[10px] my-[8px] [@media_(max-width:1020px)]:my-6 px-4">
+                    <span>Status:</span>
+                    <span className="ml-4">{details.status}</span>
+                  </p>
+
+                  {
+                    'last_air_date' in details && (
+                      <p className="xl:my-[10px] my-[8px] [@media_(max-width:1020px)]:my-6 px-4">
+                        <span>Last aired date:</span>
+                        <span className="ml-4">{details.last_air_date}</span> 
+                      </p>
+                    )
+                  }
+
+                  {/* PosterAndOthers */}
+                  {/* {
+                    'id' in card && (
+                      <div className="bg-black max-h-[150px] overflow-hidden absolute [@media_(max-width:1020px)]:static [@media_(max-width:1020px)]:my-6 [@media_(min-width:1020px)]:max-h-[120px] [@media_(min-width:1280px)]:max-h-[150px] w-full max-w-[635px] [@media_(max-width:1020px)]:max-w-full [@media_(max-width:1020px)]:max-h-max"
+                        ref={posterAndOthersContainerRef}
+                        style={{
+                          top: `${
+                            backdropImageInfo.bounds.height - 
+                            (posterAndOthersContainerRef.current?.getBoundingClientRect().height || 0)
+                          }px`
+                        }}
+                      >
+                        { images && (
+                          <PosterAndOthers 
+                            card={card}
+                            links={links}
+                            trailers={trailers}
+                            details={details}
+                            imagesToSet={images}
+                            colorThiefColor={colorThiefColor}
+                          />
+                        )
+
+                        }
+                      </div>
+                    )
+                  } */}
+
+                </div>
+                
+                {/* trailer */}
+                {/* <div className="mt-8p md:my-0p [@media_(max-width:1020px)]:mx-4 bg-red-500p "
+                  style={forBigScreen? {
+                    height:  `${
+                      (titleImageContainerRef.current?.getBoundingClientRect().height)
+                    }px` ,
+                    paddingTop: 32+'px'
+                  }: {height: 'max-content'}}
+                >
+                  <Trailer trailers={trailers} />
+                </div> */}
+                
+                
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+        {/* Starring */}
+        {/* <div className=" my-10 bg-red-200p pr-10p [@media_(max-width:1020px)]:pr-4 [@media_(max-width:1020px)]:mx-4 max-w-[1546px] mx-auto">
             {
               credits.cast?.[0] &&
                 <p 
@@ -783,140 +630,179 @@ export default function CardPage() {
                   Starring
                 </p>
             }
-            <ul className="mb-4 md:w-full grid grid-cols-2 lg:grid-cols-4 justify-around gap-4 ">
-              {
-                credits.cast && 
-                <Starring  
-                  stars={
-                    getFirstXItems(credits.cast, 4)
+            <div className="flex justify-center">
+              <ul className="my-2 grid grid-flow-col gap-4 justify-start overflow-x-auto ">
+                {
+                  credits.cast && 
+                  <Starring  
+                    stars={
+                      getFirstXItems(credits.cast)
+                    }
+                  />  
                   }
-                  card={card}
-                />  
-              }
-            </ul>
-          </div>
-        </div>
+                  </ul>
+                  </div>
+                  </div> */}
 
-        <div className="bg-amber-600p relative gridp content-betweenp mt-10 md:mt-0">
-          <div className="px-4 bg-orange-700p">
-            <p className="bg-blue-500p max-h-[200px] overflow-hidden overflow-y-auto">
-              {card.overview}
-            </p>
 
-            <p className="flex flex-wrap gap-x-2 items-center justify-between  my-4">
-              <span className="flex items-center gap-1">
-                <FaStar />
-                {
-                  card.vote_average && card.vote_average.toFixed(1)
-                }
-              </span>
-              <span>
-                {'first_air_date' in card && 
-                card.first_air_date.split('-')[0]} 
-              </span>
-              <span>{rating}</span>
-              <span>
-                {
-                  'runtime' in details 
-                  ? (
-                    calculateRuntime(details?.runtime) 
-                  )
-                  : (
-                    calculateRuntime(details?.last_episode_to_air?.runtime)
-                  )
-                }
-              </span>
-            </p>
-
-            {/* Genres */}
-            <ul className="px-4 flex bg-red-700p flex-wrap gap-x-10 my-10">
-              {
-                details.genres && details.genres.map((genre, i) => (
-                  <li key={i} className="list-disc capitalize">
-                    {genre.name}
-                  </li>
-                ))
-              }
-            </ul>
-
-            <p className="my-10">
-              <span>Status:</span>
-              <span className="ml-4">{details.status}</span>
-            </p>
-
-              {/* PosterAndOthers */}
-          </div>
-          
-          {/* trailer */}
-          <div className="bg-stone-800p my-4 md:my-0">
-            {
-              'id' in card && (
-                <PosterAndOthers 
-                  card={card}
-                  links={links}
-                />
-              )
-            }
-
-            <Trailer trailers={trailers} />
-          </div>
-          
-          
-        </div>
-
-      </div>
-
-      <div className="my-10">
-        <StarDirectorWriterCreator 
-          credits={credits} details={details}
-        />
-      
-        <SpokenLanguages details={details} />
-        
-        {
-          credits.cast?.[0] &&
-          <p className=" mx-4 text-xl">Cast: </p>
-        }
-        {
-          credits.cast &&
-          <Cast cast={credits.cast} card={card}/>  
-        }
-
-        <Recommendations id={card.id} />
-        <Similar id={card.id} />
             
-        
-        {/* <Iframes trailers={trailers}/> */}
-      </div>
 
-      <footer className="bg-slate-950 min-h-[200px]">
-        <p>footer
-          {
-            // details
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div className="my-10 max-w-[1546px] mx-auto">
+          {/* <StarDirectorWriterCreatorBar 
+            credits={credits} details={details}
+          /> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+          {/* <SpokenLanguages details={details} /> */}
+          
+          {/* {
+            credits.cast?.[0] &&
+            <p className=" mx-4 text-xl text-center">Cast</p>
+          } */}
+          {/* {
+            credits.cast && (
+              <div className="grid justify-center">
+                <Cast cast={credits.cast}/>  
+              </div>
+            )
+          } */}
+
+          {/* <Recommendations id={card.id} /> */}
+          {/* <Similar id={card.id} /> */}
+              
+          
+          {/* <Iframes trailers={trailers}/> */}
+        </div>
+
+        <footer className="bg-slate-950 min-h-[200px] py-10 px-4 max-w-[1546px] mx-auto">
+          {/* {
+            details.production_companies && (
+              <Companies 
+                results={details.production_companies} 
+                companyOrNetwork="company"
+              />
+            )
           }
-        </p> 
-      </footer>
+
+          <Reviews cardID={card.id} />
+
+          {
+            'networks' in details && (
+              <Companies 
+                results={details.networks} 
+                companyOrNetwork="network"
+              />
+            )
+          }
+
+          <WatchProviders cardId={card.id} />
+
+          <LatestMoviesOrTvShows /> */}
+
+          <div className="bg-red-500/20 grid">
+            <span>share</span>
+            <span>popularity</span>
+            <span>budget</span>
+            <span>revenue</span>
+            <span>beleongs to collection</span>
+            {/* <span>networks</span> */}
+            <span>type</span>
+            {/* <span>vote average 7.6 stars I already used</span> */}
+            <span>vote count</span>
+            <span>homepage</span>
+          </div>
+        </footer>
+        
+        
+      </div>
+      
+
+      {/* Scroll To Top */}
+      {
+        showScrollToTopBtn && (
+          <button 
+            className="text-white dark:text-white fixed bottom-4 right-4 p-2 bg-rose-600 rounded-full"
+            onClick={scrollToTp}
+          >
+            <span className="flex items-center">
+              <HiMiniArrowLongUp  size={20} className="animate-bounce"/>
+            </span>
+          </button>
+        )
+      }
 
     </section>
   )
 }
 
-/* 
-<Image 
-            alt={card.title || card.name} 
-            src={`${ImagePath}${card.backdrop_path}`} 
-            width={3840} height={2160}
-            priority
-            loading="eager"
-            quality={100}
-            placeholder="blur"
-            blurDataURL={PLACEHOLDER_IMAGE.TMDB_IMAGE}
-            className="w-[100%] h-auto"
-          />
-*/
+
 
 /*  
-a media_type about keywords in which overview
+
 staring
  moviie.credits.cast
 Director
@@ -926,5 +812,4 @@ Writers
  moviie.credits.crew
 "known_for_department": "Writing"
 */
-
 
