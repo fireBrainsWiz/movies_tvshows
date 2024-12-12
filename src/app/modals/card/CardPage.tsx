@@ -631,18 +631,18 @@ export default function CardPage() {
                 </p>
             }
             <div className="flex justify-center">
-              <ul className="my-2 grid grid-flow-col gap-4 justify-start overflow-x-auto ">
-                {
-                  credits.cast && 
-                  <Starring  
-                    stars={
-                      getFirstXItems(credits.cast)
-                    }
-                  />  
+                <ul className="my-2 grid grid-flow-col gap-4 justify-start overflow-x-auto ">
+                  {
+                    credits.cast && 
+                    <Starring  
+                      stars={
+                        getFirstXItems(credits.cast)
+                      }
+                    />  
                   }
-                  </ul>
-                  </div>
-                  </div>
+              </ul>
+            </div>
+          </div>
 
 
         <div className="my-10 max-w-[1546px] mx-auto">
@@ -650,7 +650,6 @@ export default function CardPage() {
             credits={credits} details={details}
           />
 
-        
           <SpokenLanguages details={details} />
           
           {
@@ -678,6 +677,7 @@ export default function CardPage() {
               <Companies 
                 results={details.production_companies} 
                 companyOrNetwork="company"
+                hasTitle
               />
             )
           }
@@ -689,6 +689,7 @@ export default function CardPage() {
               <Companies 
                 results={details.networks} 
                 companyOrNetwork="network"
+                hasTitle
               />
             )
           }

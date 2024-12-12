@@ -1,22 +1,26 @@
 import { TMDBOptions } from "@/app/client/helpers/TMDB_API"
 import { Params, PopularPeopleList } from "../layout"
 import PopularPeopleCards from "../components/PopularPeopleCards"
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import axios from "axios";
 
 
-export default function PopularPeopleDynamicHome({
-  params
+export default async function PopularPeopleDynamicHome({
+  params,
 }: {
-  params: Params
+  params: Params,
 }) {
-  console.log()
-console.log({params})
+
+  const {results}: PopularPeopleList = await axios(
+    `https://api.themoviedb.org/3/person/popular?language=en-US&page=${
+      params?.page_number || 1
+    }`, TMDBOptions
+  ).then(res => res.data) 
+
   return (
     <div className="bg-slate-500p bg-[#d9d9d9]p bg-[#222]">
-      {/* <p>page number: {params?.page_number}</p> */}
-      {/* <div className="bg-red-500 w-[200px] h-[300px]"></div> */}
-      <PopularPeopleCards page={Number(params?.page_number || 1)}/>
+      <PopularPeopleCards 
+        results={results}
+      />
     </div>
   )
 }
@@ -24,15 +28,38 @@ console.log({params})
 export const dynamicParams = false // true | false, 
 
 export async function generateStaticParams() {
-  // const {total_pages}: PopularPeopleList = 
-  // await fetch(
-  //   'https://api.themoviedb.org/3/person/popular?language=en-US&page=1', 
-  //   TMDBOptions
-  //   ).then(res => res.json()) 
-    
-  //   console.log({total_pages})
-
   return [...Array(500)].map((_,i) => ({
     page_number: (i + 1).toString(),
   }))
+}
+
+
+
+// export const dynamic = 'force-static'
+
+// export const runtime = 'edge'
+
+// export const revalidate = 60
+
+export async function generateMetadata({params}: {params: Params}) {
+
+  const {results}: PopularPeopleList = await axios(
+    `https://api.themoviedb.org/3/person/popular?language=en-US&page=${
+      params?.page_number || 1
+    }`, TMDBOptions
+  ).then(res => res.data)
+
+  // const metadata = results.map(item => (
+  //   item.name + ' ' + item.known_for_department +
+  //   (item.known_for.map(item => item.title) || []).join(', ')
+  // ))
+
+  const metadata = results.map(item => (item.name ))
+  const keywords = [...metadata.slice(10)].join(', ')
+
+  return {
+    title: `Popular People page ${params?.page_number || 1}`,
+    description: `${metadata}`,
+    keywords,
+  } 
 }

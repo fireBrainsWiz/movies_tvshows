@@ -22,7 +22,7 @@ export function Modal({
   return (
     <div
       onClick={handleModalClick}
-      className="bg-stone-950/95 absolute inset-0 z-10 left-0">
+      className="bg-stone-950/95 absolute inset-0 z-10 ">
           <button 
           className="text-white text-2xl cursor-pointer  p-4 absolute top-2 right-2"
           >

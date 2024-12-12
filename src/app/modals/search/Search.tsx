@@ -23,6 +23,11 @@ export default function Search() {
   const [searchTerm, setSearchTerm] = useState('blood')
 
 
+  //!test
+  // useEffect(() => {
+  //   setIsVisibleSearch(true)
+  // }, [])
+
   function handleCloseSearchClick() {
     setIsVisibleSearch(false)
   }

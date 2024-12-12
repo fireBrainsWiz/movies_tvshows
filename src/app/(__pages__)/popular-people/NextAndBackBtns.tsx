@@ -1,9 +1,12 @@
 'use client'
+
 import { TMDBOptions } from '@/app/client/helpers/TMDB_API'
-import { useRouter, usePathname, useParams } from 'next/navigation'
+import { useRouter, usePathname, useParams, } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {PopularPeopleList} from './layout'
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle } from "react-icons/io";
+
+
 
 export default function NextAndBackBtns() {
   const router = useRouter()
@@ -12,6 +15,8 @@ export default function NextAndBackBtns() {
   const [page, setPage] = useState(Number(params?.page_number) || 1)  
   const [totalPages, setTotalPages] = useState(0)
   // console.log(params?.page_number)
+
+
 
   function backward() {
     if (page <= 1) return
@@ -58,7 +63,7 @@ export default function NextAndBackBtns() {
       </button>
 
       <button
-        disabled={page >= totalPages}
+        disabled={page >= totalPages || page >= 499}
         className='disabled:opacity-10 disabled:cursor-not-allowed'
         onClick={forward}  
       >

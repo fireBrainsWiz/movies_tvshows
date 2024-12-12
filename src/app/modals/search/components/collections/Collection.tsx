@@ -78,7 +78,7 @@ export default function Collection({
 
    return (
       <div
-         className={`border border-[#C9B8B0] rounded-md grid grid-flow-col p-4 max-[680px]:grid-flow-row w-[clamp(0px,100vmax,580px)] min-h-[300px] max-h-[400px]p m-10  max-[680px]:mx-5 justify-between grid-cols-[35%_65%] max-[680px]:grid-cols-[1fr] ${bgColor}`}
+         className={`border border-[#C9B8B0] rounded-md grid grid-flow-col p-4 max-[680px]:grid-flow-row w-[clamp(0px,100vmax,580px)] min-h-[300px] max-h-[400px]p m-4 max-[680px]:mx-5 justify-between grid-cols-[35%_65%] max-[680px]:grid-cols-[1fr] ${bgColor}`}
       >
          <button 
             className="max-w-[200px] max-[680px]:max-w-full max-[680px]:mb-10 mx-auto"

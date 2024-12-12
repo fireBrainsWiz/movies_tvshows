@@ -144,7 +144,7 @@ export default function PersonCreditsSlickSlider(
                 return (
                   <span key={i} 
                   onClick={()=> {
-                    setMoviesOrTVshows('tvshows')
+                    setMoviesOrTVshows('tvshow')
                     setIsVisiblePerson(false)
                   }}
                   >

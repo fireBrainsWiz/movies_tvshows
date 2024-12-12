@@ -10,7 +10,6 @@ import { getSortedPosterPathsOfKnownFors } from "@/app/modals/card/lib/utils";
 import { MoreButton } from "./MoreButton";
 import Result from "../../components/Result";
 import MoviesOrTVshowsLinksContext from "../../context/MoviesOrTVshowsLinksContext";
-import ThemeContext from "../../context/ThemeContext";
 import CardBeingViewedContext from "../../context/CardBeingViewedContext";
 import { ResultType } from "@/app/lib/types";
 import isIOS from "@/app/client/helpers/isIOS";

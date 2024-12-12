@@ -41,8 +41,7 @@ poster_path: "/qXwf2oACn4N2O9qof5KkrTxDfnn.jpg"
    return (
    <>
       {
-         results.map((result, i) => (
-            // i === 10 &&
+         results.map((result) => (
             <Collection
                key={result.id}
                result={result}

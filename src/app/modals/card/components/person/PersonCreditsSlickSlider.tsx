@@ -150,7 +150,7 @@ export default function PersonCreditsSlickSlider({
                 return (
                   <span key={i} 
                   onClick={()=> {
-                    setMoviesOrTVshows('movies')
+                    setMoviesOrTVshows('movie')
                     setPrsonCompZIndex(10)
                   }}
                   >
@@ -200,7 +200,7 @@ export default function PersonCreditsSlickSlider({
                 return (
                   <span key={i} 
                   onClick={()=> {
-                    setMoviesOrTVshows('tvshows')
+                    setMoviesOrTVshows('tvshow')
                     setPrsonCompZIndex(10)
                   }}
                   >

@@ -20,9 +20,9 @@ export function Company({
 
 
   return (
-    <li className={ ` border border-gray-500 mb-10 rounded-md w-[350px] min-h-[220px] max-w-[350px]p max-h-[230px] my-4 mx-auto grid grid-cols-2 overflow-hidden p-2 ${getTailwindColorUsingNumber(result.id)} relative`}
+    <li className={ ` border border-gray-500 rounded-md w-[350px] min-h-[220px] max-h-[230px] mx-auto grid grid-cols-2 overflow-hidden p-2 ${getTailwindColorUsingNumber(result.id)} relative`}
     >
-      <div className="bg-amber-500/10p flex justify-center items-center">
+      <div className="flex justify-center items-center">
         <Image 
           src={result.logo_path? ImagePath + result.logo_path : '/no-image-2.webp'}
           alt="company image"
@@ -38,7 +38,7 @@ export function Company({
         </p>
         {
           result.origin_country? (
-            <p className="bg-red-500p max-h-[50px] self-end pr-1 border-r  border-gray-500  relative">
+            <p className="max-h-[50px] self-end pr-1 border-r  border-gray-500  relative">
               <span className="h-[0px] border-0 border-b  border-gray-500 absolute -top-[20px] right-0 w-full"/>
               
               <span className="bg-green-500p flex items justify-end text-right">

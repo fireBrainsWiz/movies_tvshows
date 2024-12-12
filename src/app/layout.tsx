@@ -54,6 +54,7 @@ export default function RootLayout({
                 <CardBeingViewedContextProvider>
                   <ToggleMenuContextProvider>
                     <ToggleSearchContextProvider>
+                      {/* <ThemeContextProvider> */}
 
                         <ToggleShowPersonContextProvider>
                         <>{/* <TopNav /> */}</>
@@ -79,6 +80,7 @@ export default function RootLayout({
                           <Toast />
                         </ToggleShowPersonContextProvider>
 
+                      {/* </ThemeContextProvider> */}
                     </ToggleSearchContextProvider>
                   </ToggleMenuContextProvider>
                 </CardBeingViewedContextProvider>

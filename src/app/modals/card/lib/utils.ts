@@ -516,7 +516,7 @@ export const getGenderByNumber = (number: number) => {
     case 3:
       return 'Non-binary';
     default:
-      return 'Not set / not specified';
+      return 'N/A';
   }
 };
 

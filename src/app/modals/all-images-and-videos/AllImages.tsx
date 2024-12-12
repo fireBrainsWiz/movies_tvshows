@@ -1,6 +1,5 @@
 'use client'
 
-import ImagesAndVideosContext from "@/app/(__pages__)/context/ImagesAndVideosContext"
 import MoviesOrTVshowsInfoContext from "@/app/(__pages__)/context/MoviesOrTVshowsInfoContext";
 import { TfiClose } from "react-icons/tfi";
 import BackdropLogoPosterImageSwiper from "./BackdropLogoPosterImageSwiper";

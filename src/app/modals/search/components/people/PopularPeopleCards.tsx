@@ -28,52 +28,7 @@ export default function PopularPeopleCards({
   setCardData: React.Dispatch<React.SetStateAction<CardData>>,
 }) {
 
-  // const [isActiveToViewSVG, setIsActiveToViewSVG] = useState(false)
 
-  // const [cardData, setCardData] = 
-  // useState<CardData>({
-  //   ...{} as PopularPeopleList['results'][number],
-  //   ...{} as MediaTypeInfoType['personDetails'],
-  //   imageColor: '',
-  //   dominantColor: ''
-  // })
-
-  // const [toViewCoordsAndInfo, setToViewCoordsAndInfo] = 
-  // useState<ToViewCoordsAndInfo>({
-  //   innerHeight,
-  //   scrollY: itemsContainerParentRef?.current?.scrollTop || 0,
-  //   scrollHeight: itemsContainerParentRef?.current?.scrollHeight || 0,
-  //   x: 0,
-  //   y: 0,
-  //   width: 0,
-  //   height: 0,
-  //   i: 0,
-  //   isActiveToViewSVG
-  // })
-/*  */
-  // const [results, setResults] =           useState<PopularPeopleList['results']>([])
-
-
-  // get results
-  // useEffect(() => {
-
-  //   (async () => {
-  //     try {
-  //       const {results}: PopularPeopleList = await axios(
-  //         `https://api.themoviedb.org/3/person/popular?language=en-US&page=${page}`, 
-  //         TMDBOptions
-  //       ).then(res => res.data) 
-
-  //       setResults(results)
-
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   })()
-  // }, [page])
-
-  // console.log(results, page)
-  // alert(innerWidth)
   
   return (
     < 

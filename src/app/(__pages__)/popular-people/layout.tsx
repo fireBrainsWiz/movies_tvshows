@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 }
 
 
+
 export default function layout({
   children,
 }: {
@@ -70,6 +71,6 @@ export type PopularPeopleList = {
 }
 
 export type Params = {
-  page_number: string
+  page_number: string,
 }
 

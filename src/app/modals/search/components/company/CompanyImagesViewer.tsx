@@ -111,10 +111,13 @@ export default function CompanyImagesViewer() {
 
         
         if (parent_company) {
+          const id = parent_company.id
           setHistory(prev => {
+            if (!id) return prev
+
             return [
               ...prev
-              .filter(item => item !== parent_company.id), parent_company.id
+              .filter(item => item !== id), id
             ]
           })
           getDetails(parent_company.id)

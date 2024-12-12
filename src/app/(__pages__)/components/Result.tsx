@@ -8,16 +8,21 @@ import { MdMoreVert } from "react-icons/md";
 import { TfiClose } from "react-icons/tfi";
 import MoviesOrTVshowsLinksContext from '../context/MoviesOrTVshowsLinksContext';
 import { SaveOrRemoveFromSavedStore } from './save/SaveOrRemoveFromSavedStore';
-
+import Link from 'next/link';
+import { encodeURLString } from './BelowTheHeader';
 
 export default function Result({
   item,
   fromToViewSVG,
-  media_type 
+  media_type,
+  horizontal,
+  width 
 }: {
   item: ResultType
   fromToViewSVG?: boolean
   media_type?: 'movie' | 'tvshow'
+  horizontal?: boolean
+  width?: number
 }) {
   // console.log(item)
   const {setIsVisibleCardPage, setCard, setScrollTop} = useContext(CardBeingViewedContext)
@@ -51,25 +56,33 @@ export default function Result({
       document.removeEventListener('click', fn)
     }
   })
-
   
   
   return (
     <div className="relative bg-red-500p max-w-max max-w-[200px]p "
       onClick={e =>e.stopPropagation()}
     >
-      <button 
+      <Link href={
+        `${
+          media_type || links.MEDIATYPE}/${item.id}?title=${
+            encodeURLString(item.name || item.title || item.original_name || 'unknown')
+        }`
+      } 
       onClick={handleClick} 
       // onMouseEnter={handleMouseEnter}
     >
         <Image 
           src={
-            item.poster_path
-            ? ImagePath+item.poster_path 
-            : '/no-image.png'
+            horizontal
+            ? item.backdrop_path || '/no-backdrop-image.png'
+            : item.poster_path
+              ? ImagePath+item.poster_path 
+              : '/no-image.png'
           }
-          width={200}
-          height={300}
+          // width={200}
+          // height={300}
+          width={width || 138}
+          height={209}
           alt={item.name || item.title || item.original_name || 'unknown'}
           // priority
           placeholder="blur"
@@ -77,7 +90,7 @@ export default function Result({
           // className='max-w-full h-auto object-contain'
         />
         
-      </button>
+      </Link>
       <button className="absolute top-0 right-0 w-[30px] isolate"
         onClick={() => setOpenMore(!openMore)}
       >

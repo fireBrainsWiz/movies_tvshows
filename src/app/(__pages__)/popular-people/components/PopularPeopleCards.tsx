@@ -10,9 +10,9 @@ import { Modal } from "./Modal"
 import { MediaTypeInfoType } from "@/app/lib/MediaTypeInfoTypes"
 
 export default function PopularPeopleCards({
-  page
+  results,
 }: {
-  page: number,
+  results: PopularPeopleList['results']
 }) {
 
   const [isActiveToViewSVG, setIsActiveToViewSVG] = useState(false)
@@ -40,30 +40,7 @@ export default function PopularPeopleCards({
     isActiveToViewSVG
   })
 
-  const [results, setResults] = 
-  useState<PopularPeopleList['results']>([])
 
-
-  // get results
-  useEffect(() => {
-
-    (async () => {
-      try {
-        const {results}: PopularPeopleList = await axios(
-          `https://api.themoviedb.org/3/person/popular?language=en-US&page=${page}`, 
-          TMDBOptions
-        ).then(res => res.data) 
-
-        setResults(results)
-
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [page])
-  // console.log(results, page)
-  // alert(innerWidth)
-  
   return (
     <div 
     className="flex flex-wrap gap-4 justify-center"

@@ -262,7 +262,7 @@ export default function ItemsSlides({
         {datas.length> 0? title : 'No results found'}
       </h2>
 
-      <div>
+      <div className="relative">
         <Slider  {...settings} ref={sliderRef}>
           {
             datas?.map(({results}, i) => {
@@ -305,14 +305,12 @@ export default function ItemsSlides({
                   )
                 }
           
-                <ToViewSVG
-                  key={toViewCoordsAndInfo.i} 
-                  coordsAndInfo={toViewCoordsAndInfo}
-                  isActiveToViewSVG={isActiveToViewSVG}
-                  setIsActiveToViewSVG={setIsActiveToViewSVG}
-                  cardData={cardData}
-                  itemsContainerParentRef={itemsContainerParentRef}
-                />
+                  <ToViewSVG
+                    key={toViewCoordsAndInfo.i} 
+                    isActiveToViewSVG={isActiveToViewSVG}
+                    setIsActiveToViewSVG={setIsActiveToViewSVG}
+                    cardData={cardData}
+                  />
               </>
             )
           }
@@ -341,6 +339,7 @@ export default function ItemsSlides({
         datas={datas}
       /> */}
 
+      {/* slider buttons */}
       <div>
         {
           datas.length > 0 && (

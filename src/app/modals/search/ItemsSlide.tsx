@@ -53,9 +53,8 @@ export default function ItemsSlide({
 //   console.log(results)
 //  }
 
-const isOthers = 
-  ['People', 'Collections', 'Companies'].includes(title)
-;
+  const isOthers = ['People', 'Collections', 'Companies'].includes(title)
+
 
   // useEffect(() => {
   //   (async () => {
@@ -76,18 +75,14 @@ const isOthers =
   // console.log({title})
 
   // return null
+
+  
   return (
     <div 
-    // className="bg-rose-700p flex flex-wrap items-center justify-center gap-3 px-3  h-ful "
     className={`
-    ${!(title === 'Collections') && title !== 'Companies' ? 'bg-emerald-700p grid grid-flow-col grid-rows-[repeat(10,minmax(0,1fr))] gap-3 px-3' : 'py-10 flex flex-wrap  text-center justify-center  relative'}
-    ${title === 'People' 
-      ? 'min-[400px]:grid-rows-10 md:grid-rows-5 lg:grid-rows-4' 
-      : ' min-[400px]:grid-rows-5 md:grid-rows-4 lg:grid-rows-4 2xl:grid-rows-2 '} 
-
-    ${title === 'Companies' 
-      ? 'relative overflow-hidden' 
-      : null} 
+      ${!isOthers ? 'bg-emerald-700p flex flex-wrap gap-3 px-3 justify-center items-center' :''} 
+      ${title === 'People' ? 'relative flex flex-wrap gap-3 px-3 justify-center items-center' :''} 
+      ${title === 'Collections' ? ' overflow-hidden flex flex-wrap  text-center justify-center' :''} 
     `}
     >
       {
